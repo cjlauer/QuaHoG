@@ -197,3 +197,45 @@ qhg_nn_sequential_sink_d(qhg_spinor_field out[], qhg_spinor_field in[], int t0, 
   }
   return;
 }
+
+void
+qhg_mesons_sequential_sink(qhg_spinor_field out[], qhg_spinor_field in[], int t0, qhg_thrp_nn_sink_params thrp_params)
+{
+  qhg_lattice *lat = in[0].lat;
+  int *proc_coords = lat->comms->proc_coords;
+  int *dims = lat->dims;
+  int lt = lat->ldims[0];  
+  unsigned long int lvol = lat->lvol;
+  unsigned long int lv3 = lat->lv3;
+
+  /* Only loop along appropriate sink time-slice */
+  int dt = thrp_params.dt;
+  int ts = (t0+dt) % dims[0];
+  int t_rank = ts / lt;
+  int ts_loc = ts % lt;
+  unsigned long int v0, v1;
+  if(proc_coords[0] == t_rank) {
+    v0 = lv3*(unsigned long int)ts_loc;
+    v1 = lv3*(unsigned long int)(ts_loc+1);
+  } else {
+    v0 = 0; /* Do nothing */
+    v1 = 0;
+  }
+
+  _Complex double zero[NC*NS][NC*NS];
+  prop_zero(zero);
+  for(unsigned long int v=0; v<lvol; v++)
+    prop_store(out, v, zero);
+  
+  for(unsigned long int v=v0; v<v1; v++) {
+    /* X is in[], Y is out[] */
+    _Complex double X[NS*NC][NS*NC];
+    _Complex double Y[NS*NC][NS*NC];
+    prop_load(X, in, v);
+    _Complex double g5x[NS*NC][NS*NC];
+    
+    prop_g5_G(Y, X);
+    prop_store(out, v, Y);
+  }
+  return;
+}
