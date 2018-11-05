@@ -134,3 +134,58 @@ qhg_mesons(qhg_spinor_field sp_u[NS*NC], qhg_spinor_field sp_d[NS*NC], int sourc
   return corr;
 }
   
+
+qhg_correlator
+qhg_mesons_pseudoscalar(qhg_spinor_field sp1[NS*NC], qhg_spinor_field sp2[NS*NC], int source_coords[ND])
+{
+  qhg_lattice *lat = sp1[0].lat;
+  qhg_correlator corr = qhg_correlator_init(1, lat);
+  for(int i=0; i<ND; i++)
+    corr.origin[i] = source_coords[i];
+  int tsrc = corr.origin[0];  
+  unsigned long int lvol = lat->lvol;
+  unsigned long int lv3 = lat->lv3;
+  int lt = lat->ldims[0];
+  int t0 = lat->ldims[0]*lat->comms->proc_coords[0];  
+
+#ifdef QHG_OMP
+#pragma omp parallel for
+#endif
+  for(unsigned long int v=0; v<lvol; v++) {
+    _Complex double P1[NS*NC][NS*NC];
+    _Complex double P2[NS*NC][NS*NC];
+    _Complex double C[NS*NC][NS*NC];    
+
+    prop_load(P1, sp1, v);
+    prop_load(P2, sp2, v);
+
+    int t = (int)(v/lv3);
+    int gt = t + t0;
+    if(gt < tsrc) {
+      
+      switch(sp1[0].bc) {
+      case PERIODIC:
+	break;
+      case ANTIPERIODIC:
+	prop_scale(-1, P1);
+	break;
+      }
+    
+      switch(sp2[0].bc) {
+      case PERIODIC:
+	break;
+      case ANTIPERIODIC:
+	prop_scale(-1, P2);
+	break;
+      }
+      
+    }
+    
+    prop_mul_gd(C, P1, P2);
+    corr.C[v] = prop_trace(C);
+  }
+  
+  corr.mom_list = NULL;
+  return corr;
+}
+  

@@ -30,8 +30,9 @@ prop_bc(enum qhg_fermion_bc_time bc, _Complex double (*p)[NC*NS])
 }
 
 qhg_correlator
-qhg_nn_thrp(qhg_spinor_field fwd[NS*NC], qhg_spinor_field bwd[NS*NC], qhg_gauge_field gf,
-	    int source_coords[ND], qhg_thrp_nn_sink_params thrp_sink)
+qhg_nn_thrp(qhg_spinor_field fwd[NS*NC], qhg_spinor_field bwd[NS*NC], 
+	    qhg_gauge_field gf, int source_coords[ND], 
+	    qhg_thrp_nn_sink_params thrp_sink)
 {  
   qhg_lattice *lat = fwd[0].lat;
   qhg_correlator corr = qhg_correlator_init(SITE_SIZE, lat);

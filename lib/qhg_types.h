@@ -80,7 +80,8 @@ enum projector {
 
 enum flavor {
   up,
-  dn
+  dn,
+  strange
 };
 
 typedef struct {

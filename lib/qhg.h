@@ -34,9 +34,11 @@
 #include <qhg_nn_thrp.h>
 #include <qhg_nn_thrp_defs.h>
 #include <qhg_write_nn_thrp.h>
+#include <qhg_write_mesons_thrp.h>
 #include <qhg_prop_field_linalg.h>
 #include <qhg_io_utils.h>
 #include <qhg_correlator_shift.h>
+#include <qhg_conjugate_thrp.h>
 #include <qhg_ft.h>
 
 #endif /* _QHG_H */

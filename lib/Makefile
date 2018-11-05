@@ -46,9 +46,11 @@ SOURCES=\
 	qhg_spinor_field_rms		\
 	qhg_nn_thrp			\
 	qhg_write_nn_thrp		\
+	qhg_write_mesons_thrp		\
 	qhg_prop_field_linalg		\
 	qhg_ft				\
 	qhg_nn_sequential_sink		\
+	qhg_conjugate_thrp 		\
 	qhg_correlator_shift
 
 include $(wildcard *.d)
