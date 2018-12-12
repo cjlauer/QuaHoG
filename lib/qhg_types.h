@@ -4,6 +4,7 @@
 #include <mpi.h>
 #include <stdlib.h>
 #include <qhg_defs.h>
+#include <string.h>
 
 enum qhg_fermion_bc_time {
   PERIODIC,
@@ -47,6 +48,12 @@ typedef struct {
 } qhg_gauge_field;
 
 typedef struct {
+  afloat *((*field)[NC][NC][2]);
+  afloat *alloc;
+  qhg_lattice *lat;
+} qhg_fast_gauge_field;
+
+typedef struct {
   _Complex double *field;
   _Complex double *bnd[2*ND];
   _Complex double *edge[2*ND][2*ND];
@@ -55,8 +62,29 @@ typedef struct {
 } qhg_spinor_field;
 
 typedef struct {
+  afloat *((*field)[NS][NS][NC][NC][2]);
+  afloat *alloc;
+  enum qhg_fermion_bc_time bc;
+  qhg_lattice *lat;
+} qhg_fast_spinor_field;
+
+typedef struct {
+  double (*C)[NS][NS][NS][NS][2];
+  qhg_lattice *lat;  
+  int tsrc;  
+  int write;  
+} qhg_mesons_open_correlator;
+
+typedef struct {
+  double (*C)[NS][NS][NS][NS][NS][NS][2];
+  qhg_lattice *lat;  
+  int tsrc;  
+  int write;  
+} qhg_baryons_open_correlator;
+
+typedef struct {
   int (*mom_vecs)[3];
-  int n_mom_vecs;
+  unsigned long int n_mom_vecs;
   int max_mom_sq;
 } qhg_mom_list;
   
@@ -69,6 +97,7 @@ typedef struct {
   qhg_mom_list *mom_list;
   qhg_lattice *lat;  
 } qhg_correlator;
+  
 
 enum projector {
   P0,
@@ -78,10 +107,49 @@ enum projector {
   P6
 };
 
+static char *
+proj_to_str(enum projector proj)
+{
+  switch(proj) {
+  case P0:
+    return "P0\0";
+  case P3:
+    return "P3\0";
+  case P4:
+    return "P4\0";
+  case P5:
+    return "P5\0";
+  case P6:
+    return "P6\0";
+  }
+  return NULL;
+}
+
+static enum projector
+str_to_proj(char s[])
+{
+  if(strcmp(s, "P0\0") == 0)
+    return P0;
+  if(strcmp(s, "P3\0") == 0)
+    return P3;
+  if(strcmp(s, "P4\0") == 0)
+    return P4;
+  if(strcmp(s, "P5\0") == 0)
+    return P5;
+  if(strcmp(s, "P6\0") == 0)
+    return P6;
+  return -1;
+}
+
 enum flavor {
   up,
   dn,
   strange
+};
+
+enum space {
+  POS_SPACE,
+  MOM_SPACE
 };
 
 typedef struct {
@@ -92,8 +160,23 @@ typedef struct {
 } qhg_thrp_correlator;
 
 typedef struct {
+  _Complex double **C;
+  size_t site_size;
+  int *origin;
+  qhg_mom_list *mom_list;
+  qhg_lattice *lat;  
+  int dt;
+  int der_order;
+  int ncorr;
+  enum flavor flav;
+  enum projector proj;
+} qhg_der_correlator;
+
+typedef struct {
   enum projector proj;
   int dt;
+  enum space corr_space;
+  qhg_mom_list *mom_list;
 } qhg_thrp_nn_sink_params;
 
 #endif /* _QHG_TYPES_H */

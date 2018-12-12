@@ -1,0 +1,170 @@
+Intel(R) Advisor can now assist with vectorization and show optimization
+  report messages with your source code.
+See "https://software.intel.com/en-us/intel-advisor-xe" for details.
+
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINING OPTION VALUES:
+  -inline-factor: 100
+  -inline-min-size: 30
+  -inline-max-size: 230
+  -inline-max-total-size: 2000
+  -inline-max-per-routine: 10000
+  -inline-max-per-compile: 500000
+
+
+Begin optimization report for: qhg_fast_mesons(qhg_fast_spinor_field, qhg_fast_spinor_field)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (qhg_fast_mesons(qhg_fast_spinor_field, qhg_fast_spinor_field)) [1] qhg_fast_mesons.c(14,1)
+  -> EXTERN: (18,12) qhg_alloc(size_t)
+  -> EXTERN: (19,3) memset(void *, int, size_t)
+  -> EXTERN: (45,3) MPI_Comm_split(MPI_Comm, int, int, MPI_Comm *)
+  -> EXTERN: (49,3) MPI_Comm_rank(MPI_Comm, int *)
+  -> EXTERN: (52,5) MPI_Reduce(const void *, void *, int, MPI_Datatype, MPI_Op, int, MPI_Comm)
+  -> EXTERN: (55,5) MPI_Reduce(const void *, void *, int, MPI_Datatype, MPI_Op, int, MPI_Comm)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at qhg_fast_mesons.c(26,3)
+   remark #25101: Loop Interchange not done due to: Original Order seems proper
+   remark #25452: Original Order found to be proper, but by a close margin
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at qhg_fast_mesons.c(27,5)
+      remark #15542: loop was not vectorized: inner loop was already vectorized
+
+      LOOP BEGIN at qhg_fast_mesons.c(28,7)
+         remark #15542: loop was not vectorized: inner loop was already vectorized
+
+         LOOP BEGIN at qhg_fast_mesons.c(29,9)
+            remark #15542: loop was not vectorized: inner loop was already vectorized
+
+            LOOP BEGIN at qhg_fast_mesons.c(30,11)
+               remark #15542: loop was not vectorized: inner loop was already vectorized
+
+               LOOP BEGIN at qhg_fast_mesons.c(31,13)
+                  remark #15542: loop was not vectorized: inner loop was already vectorized
+
+                  LOOP BEGIN at qhg_fast_mesons.c(32,15)
+                     remark #15542: loop was not vectorized: inner loop was already vectorized
+
+                     LOOP BEGIN at qhg_fast_mesons.c(33,17)
+                     <Peeled loop for vectorization>
+                        remark #25015: Estimate of max trip count of loop=3
+                     LOOP END
+
+                     LOOP BEGIN at qhg_fast_mesons.c(33,17)
+                        remark #15300: LOOP WAS VECTORIZED
+                        remark #15442: entire loop may be executed in remainder
+                        remark #15448: unmasked aligned unit stride loads: 2 
+                        remark #15450: unmasked unaligned unit stride loads: 6 
+                        remark #15475: --- begin vector loop cost summary ---
+                        remark #15476: scalar loop cost: 50 
+                        remark #15477: vector loop cost: 11.500 
+                        remark #15478: estimated potential speedup: 4.120 
+                        remark #15487: type converts: 2 
+                        remark #15488: --- end vector loop cost summary ---
+                     LOOP END
+
+                     LOOP BEGIN at qhg_fast_mesons.c(33,17)
+                     <Alternate Alignment Vectorized Loop>
+                     LOOP END
+
+                     LOOP BEGIN at qhg_fast_mesons.c(33,17)
+                     <Remainder loop for vectorization>
+                     LOOP END
+                  LOOP END
+               LOOP END
+            LOOP END
+         LOOP END
+      LOOP END
+   LOOP END
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+qhg_fast_mesons.c(19,3):remark #34014: optimization advice for memset: increase the destination's alignment to 16 (and use __assume_aligned) to speed up library implementation
+qhg_fast_mesons.c(19,3):remark #34026: call to memset implemented as a call to optimized library version
+qhg_fast_mesons.c(60,10):remark #34014: optimization advice for memcpy: increase the destination's alignment to 16 (and use __assume_aligned) to increase the width of stores
+qhg_fast_mesons.c(60,10):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (16, 0), and destination (alignment, offset): (1, 0)
+===========================================================================
+
+Begin optimization report for: qhg_mesons_open_correlator_finalize(qhg_mesons_open_correlator)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (qhg_mesons_open_correlator_finalize(qhg_mesons_open_correlator)) [2] qhg_fast_mesons.c(65,1)
+  -> EXTERN: (66,3) free(void *)
+
+===========================================================================
+
+Begin optimization report for: qhg_write_mesons_open_correlator(char *, qhg_mesons_open_correlator, char *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (qhg_write_mesons_open_correlator(char *, qhg_mesons_open_correlator, char *)) [3] qhg_fast_mesons.c(73,1)
+  -> EXTERN: (83,3) MPI_Comm_split(MPI_Comm, int, int, MPI_Comm *)
+  -> EXTERN: (89,21) ?1memset
+  -> EXTERN: (90,19) ?1memcpy
+  -> EXTERN: (91,20) ?1memcpy
+  -> EXTERN: (93,19) H5Pcreate(hid_t)
+  -> EXTERN: (93,29) H5open(void)
+  -> EXTERN: (94,3) H5Pset_fapl_mpio(hid_t, MPI_Comm, MPI_Info)
+  -> EXTERN: (95,19) H5Fcreate(const char *, unsigned int, hid_t, hid_t)
+  -> EXTERN: (95,36) H5check_version(unsigned int, unsigned int, unsigned int)
+  -> EXTERN: (96,3) H5Pclose(hid_t)
+  -> EXTERN: (98,19) H5Pcreate(hid_t)
+  -> EXTERN: (98,29) H5open(void)
+  -> EXTERN: (99,3) H5Pset_create_intermediate_group(hid_t, unsigned int)
+  -> EXTERN: (100,18) H5Gcreate2(hid_t, const char *, hid_t, hid_t, hid_t)
+  -> EXTERN: (108,22) H5Screate_simple(int, const hsize_t *, const hsize_t *)
+  -> EXTERN: (109,19) H5Acreate2(hid_t, const char *, hid_t, hid_t, hid_t, hid_t)
+  -> EXTERN: (109,46) H5open(void)
+  -> EXTERN: (110,3) H5Awrite(hid_t, hid_t, const void *)
+  -> EXTERN: (110,21) H5open(void)
+  -> EXTERN: (111,3) H5Aclose(hid_t)
+  -> EXTERN: (112,3) H5Sclose(hid_t)
+  -> EXTERN: (114,16) ?1memcpy
+  -> EXTERN: (115,16) H5Screate(H5S_class_t)
+  -> EXTERN: (116,19) H5Tcopy(hid_t)
+  -> EXTERN: (116,27) H5open(void)
+  -> EXTERN: (117,3) H5Tset_size(hid_t, size_t)
+  -> EXTERN: (117,24) strlen(const char *)
+  -> EXTERN: (118,13) H5Acreate1(hid_t, const char *, hid_t, hid_t, hid_t)
+  -> EXTERN: (119,3) H5Awrite(hid_t, hid_t, const void *)
+  -> EXTERN: (121,3) H5Aclose(hid_t)
+  -> EXTERN: (122,3) H5Tclose(hid_t)
+  -> EXTERN: (123,3) H5Sclose(hid_t)
+  -> EXTERN: (126,21) H5Screate_simple(int, const hsize_t *, const hsize_t *)
+  -> EXTERN: (127,22) H5Dcreate2(hid_t, const char *, hid_t, hid_t, hid_t, hid_t, hid_t)
+  -> EXTERN: (127,48) H5open(void)
+  -> EXTERN: (128,20) H5Screate_simple(int, const hsize_t *, const hsize_t *)
+  -> EXTERN: (129,15) H5Dget_space(hid_t)
+  -> EXTERN: (130,3) H5Sselect_hyperslab(hid_t, H5S_seloper_t, const hsize_t *, const hsize_t *, const hsize_t *, const hsize_t *)
+  -> EXTERN: (131,20) H5Pcreate(hid_t)
+  -> EXTERN: (131,30) H5open(void)
+  -> EXTERN: (132,3) H5Pset_dxpl_mpio(hid_t, H5FD_mpio_xfer_t)
+  -> EXTERN: (133,19) H5Dwrite(hid_t, hid_t, hid_t, hid_t, hid_t, const void *)
+  -> EXTERN: (133,40) H5open(void)
+  -> EXTERN: (134,3) H5Dclose(hid_t)
+  -> EXTERN: (135,3) H5Sclose(hid_t)
+  -> EXTERN: (136,3) H5Sclose(hid_t)
+  -> EXTERN: (137,3) H5Pclose(hid_t)
+  -> EXTERN: (138,3) H5Pclose(hid_t)
+  -> EXTERN: (139,3) H5Gclose(hid_t)
+  -> EXTERN: (140,3) H5Fclose(hid_t)
+  -> EXTERN: (141,3) MPI_Comm_free(MPI_Comm *)
+
+
+    Report from: Code generation optimizations [cg]
+
+qhg_fast_mesons.c(89,21):remark #34000: call to memset implemented inline with stores with proven (alignment, offset): (16, 0)
+qhg_fast_mesons.c(90,19):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (16, 0), and destination (alignment, offset): (16, 0)
+qhg_fast_mesons.c(91,20):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (16, 0), and destination (alignment, offset): (16, 0)
+qhg_fast_mesons.c(114,16):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (16, 0), and destination (alignment, offset): (16, 0)
+===========================================================================

@@ -9,6 +9,8 @@
  * Single color-spin index from [spin,color] index
  */
 #define CS(s,c) ((c)+(s)*NC)
+#define CS2S(cs) ((int) cs/NC)
+#define CS2C(cs) ((int) cs%NC)
 
 /*
  * Single index from [color0,color1] index

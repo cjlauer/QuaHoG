@@ -71,6 +71,7 @@ qhg_write_mesons_udsc(char fname[], qhg_correlator corr)
       char *group_tag;
       asprintf(&group_tag, "%s%s", flav_tags[iflav0], flav_tags[iflav1]);
       hid_t group1_id = H5Gcreate(file_id, group_tag, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+      free(group_tag);
       for(int igamma=0; igamma<NGAMMAS; igamma++) {
 	for(unsigned long int v=0; v<lvol; v++) {
 	  buf[0 + 2*v] = creal(corr.C[VGF(v, igamma, iflav0, iflav1)]);
@@ -79,6 +80,7 @@ qhg_write_mesons_udsc(char fname[], qhg_correlator corr)
 	  
 	asprintf(&group_tag, "%s", gamma_tags[igamma]);
 	hid_t group2_id = H5Gcreate(group1_id, group_tag, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);      
+      free(group_tag);
 	hid_t filespace = H5Screate_simple(ND+1, dims, NULL); 
 	hid_t dataset_id = H5Dcreate(group2_id, "corr_x", H5T_NATIVE_DOUBLE, filespace,H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 	hid_t subspace = H5Screate_simple(ND+1, ldims, NULL);

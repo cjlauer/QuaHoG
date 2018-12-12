@@ -122,6 +122,7 @@ qhg_write_nn_thrp(char fname[], qhg_thrp_correlator corr_thrp, char group[])
     char *group_tag;
     asprintf(&group_tag, "%s", chan_tags[ichan]);
     hid_t group_id = H5Gcreate(top_id, group_tag, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+    free(group_tag);
 
     /*
       Attributes (metadata) are:
@@ -170,7 +171,10 @@ qhg_write_nn_thrp(char fname[], qhg_thrp_correlator corr_thrp, char group[])
       case dn:
 	flav = strdup("dn");
 	break;
-      }      
+      default:
+	fprintf(stderr, " Flavor %s is not supported\n", corr_thrp.flav);
+	exit(3);
+      }
       hid_t attrdat_id = H5Screate(H5S_SCALAR);
       hid_t type_id = H5Tcopy(H5T_C_S1);
       H5Tset_size(type_id, strlen(flav));

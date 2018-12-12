@@ -172,6 +172,10 @@ qhg_write_mesons_thrp(char fname[], qhg_thrp_correlator corr_thrp, char group[])
       case strange:
 	flav = strdup("strange");
 	break;
+      default:
+	fprintf(stderr, " Flavor %s is not supported\n", corr_thrp.flav);
+	exit(3);
+	break;
       }      
       hid_t attrdat_id = H5Screate(H5S_SCALAR);
       hid_t type_id = H5Tcopy(H5T_C_S1);

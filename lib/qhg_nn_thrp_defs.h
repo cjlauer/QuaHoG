@@ -1,6 +1,5 @@
 #ifndef _QHG_NN_THRP_DEFS_H
 #define _QHG_NN_THRP_DEFS_H 1
-#include <string.h>
 #define NLOC 16			// number of local operator directions
 #define NNOE 4			// number of noether operator directions
 #define NVDER ((4*(4+1))/2)	// number of vector-derivative directions
@@ -89,39 +88,5 @@ static enum {
   der_g5sizx_x, der_g5sizx_y, der_g5sizx_z,
   der_g5sizy_y, der_g5sizy_z,
 } channels;
-
-static char *
-proj_to_str(enum projector proj)
-{
-  switch(proj) {
-  case P0:
-    return "P0\0";
-  case P3:
-    return "P3\0";
-  case P4:
-    return "P4\0";
-  case P5:
-    return "P5\0";
-  case P6:
-    return "P6\0";
-  }
-  return NULL;
-}
-
-static enum projector
-str_to_proj(char s[])
-{
-  if(strcmp(s, "P0\0") == 0)
-    return P0;
-  if(strcmp(s, "P3\0") == 0)
-    return P3;
-  if(strcmp(s, "P4\0") == 0)
-    return P4;
-  if(strcmp(s, "P5\0") == 0)
-    return P5;
-  if(strcmp(s, "P6\0") == 0)
-    return P6;
-  return -1;
-}
 
 #endif /* _QHG_NN_THRP_DEFS_H */

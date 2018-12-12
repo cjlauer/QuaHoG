@@ -14,6 +14,7 @@ endif
 
 all: libqhg.a
 
+#CFLAGS += -qopt-report=1 -I./
 CFLAGS += -I./
 SOURCES=\
 	qhg_lattice			\
@@ -22,6 +23,10 @@ SOURCES=\
 	qhg_stop_watch			\
 	qhg_gauge_field			\
 	qhg_spinor_field		\
+	qhg_fast_spinor_field		\
+	qhg_fast_gauge_field		\
+	qhg_fast_mesons			\
+	qhg_fast_baryons		\
 	qhg_correlator			\
 	qhg_xchange_gauge		\
 	qhg_xchange_spinor		\
@@ -32,6 +37,7 @@ SOURCES=\
 	qhg_mom_list			\
 	qhg_mesons			\
 	qhg_write_mesons		\
+	qhg_write_mesons_thrp           \
 	qhg_mesons_udsc			\
 	qhg_write_mesons_udsc		\
 	qhg_nucleons			\
@@ -45,12 +51,15 @@ SOURCES=\
 	qhg_spinor_field_linalg		\
 	qhg_spinor_field_rms		\
 	qhg_nn_thrp			\
+	qhg_nn_thrp_der			\
 	qhg_write_nn_thrp		\
-	qhg_write_mesons_thrp		\
+	qhg_nn_thrp_der2		\
+	qhg_write_nn_thrp_der		\
+	qhg_write_nn_thrp_der2		\
 	qhg_prop_field_linalg		\
 	qhg_ft				\
 	qhg_nn_sequential_sink		\
-	qhg_conjugate_thrp 		\
+	qhg_conjugate_thrp              \
 	qhg_correlator_shift
 
 include $(wildcard *.d)
@@ -64,6 +73,10 @@ libqhg.a: ${addsuffix .o, $(SOURCES)}
 	$(E) CC $<
 	$(C)$(CC) $(CFLAGS) -c $< -o $@
 	$(C)$(CC) -M $(CFLAGS) -c $< > $*.d
+
+%.optrpt: %.c
+	$(E) CC-report $<
+	$(C)$(CC) $(CFLAGS) -qopt-report=3 -c $< 
 
 clean:
 	$(E) CLEAN in $(PWD)

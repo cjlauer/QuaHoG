@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-
-#define QHG_MEMALIGN 64
+#include <qhg_defs.h>
 
 /*
  * Malloc, with minimal error handling

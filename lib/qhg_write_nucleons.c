@@ -52,6 +52,8 @@ qhg_write_nucleons(char fname[], qhg_correlator corr, char group[])
     char *group_tag;
     asprintf(&group_tag, "%s", flav_tags[iflav]);
     hid_t group1_id = H5Gcreate(top_id, group_tag, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+    free(group_tag);
+
     for(int ichan=0; ichan<NCHAN; ichan++) {
       for(unsigned long int v=0; v<lvol; v++)
 	for(int s0=0; s0<NS; s0++)
@@ -62,7 +64,7 @@ qhg_write_nucleons(char fname[], qhg_correlator corr, char group[])
 	  
       asprintf(&group_tag, "%s", chan_tags[ichan]);
       hid_t group2_id = H5Gcreate(group1_id, group_tag, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);      
-
+      free(group_tag);
       /*
 	Attributes (metadata) are: 1) the origin (source position) and 2)
 	the index order in the file

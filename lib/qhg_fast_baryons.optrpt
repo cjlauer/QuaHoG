@@ -1,0 +1,545 @@
+Intel(R) Advisor can now assist with vectorization and show optimization
+  report messages with your source code.
+See "https://software.intel.com/en-us/intel-advisor-xe" for details.
+
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINING OPTION VALUES:
+  -inline-factor: 100
+  -inline-min-size: 30
+  -inline-max-size: 230
+  -inline-max-total-size: 2000
+  -inline-max-per-routine: 10000
+  -inline-max-per-compile: 500000
+
+
+Begin optimization report for: qhg_fast_baryons(qhg_fast_spinor_field, qhg_fast_spinor_field, qhg_fast_spinor_field)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (qhg_fast_baryons(qhg_fast_spinor_field, qhg_fast_spinor_field, qhg_fast_spinor_field)) [6] qhg_fast_baryons.c(386,1)
+  -> EXTERN: (390,12) qhg_alloc(size_t)
+  -> EXTERN: (391,3) memset(void *, int, size_t)
+  -> INLINE (MANUAL): (397,5) qhg_fast_contract_f111(qhg_baryons_open_correlator, qhg_fast_spinor_field)
+    -> EXTERN: (52,28) _vla_alloc(long)
+    -> EXTERN: (53,28) _vla_alloc(long)
+    -> EXTERN: (55,28) _vla_alloc(long)
+    -> EXTERN: (56,28) _vla_alloc(long)
+    -> EXTERN: (58,28) _vla_alloc(long)
+    -> EXTERN: (59,28) _vla_alloc(long)
+    -> EXTERN: (116,19) _vla_free(void *, long)
+    -> EXTERN: (116,19) _vla_free(void *, long)
+    -> EXTERN: (116,19) _vla_free(void *, long)
+    -> EXTERN: (116,19) _vla_free(void *, long)
+    -> EXTERN: (116,19) _vla_free(void *, long)
+    -> EXTERN: (116,19) _vla_free(void *, long)
+  -> INLINE (MANUAL): (400,5) qhg_fast_contract_f112(qhg_baryons_open_correlator, qhg_fast_spinor_field, qhg_fast_spinor_field)
+    -> EXTERN: (154,28) _vla_alloc(long)
+    -> EXTERN: (155,28) _vla_alloc(long)
+    -> EXTERN: (184,19) _vla_free(void *, long)
+    -> EXTERN: (184,19) _vla_free(void *, long)
+  -> INLINE (MANUAL): (403,5) qhg_fast_contract_f121(qhg_baryons_open_correlator, qhg_fast_spinor_field, qhg_fast_spinor_field)
+    -> EXTERN: (221,28) _vla_alloc(long)
+    -> EXTERN: (222,28) _vla_alloc(long)
+    -> EXTERN: (251,19) _vla_free(void *, long)
+    -> EXTERN: (251,19) _vla_free(void *, long)
+  -> INLINE (MANUAL): (406,5) qhg_fast_contract_f122(qhg_baryons_open_correlator, qhg_fast_spinor_field, qhg_fast_spinor_field)
+    -> EXTERN: (287,28) _vla_alloc(long)
+    -> EXTERN: (288,28) _vla_alloc(long)
+    -> EXTERN: (319,19) _vla_free(void *, long)
+    -> EXTERN: (319,19) _vla_free(void *, long)
+  -> INLINE (MANUAL): (409,5) qhg_fast_contract_f123(qhg_baryons_open_correlator, qhg_fast_spinor_field, qhg_fast_spinor_field, qhg_fast_spinor_field)
+    -> EXTERN: (356,28) _vla_alloc(long)
+    -> EXTERN: (357,28) _vla_alloc(long)
+    -> EXTERN: (380,19) _vla_free(void *, long)
+    -> EXTERN: (380,19) _vla_free(void *, long)
+  -> EXTERN: (419,3) MPI_Comm_split(MPI_Comm, int, int, MPI_Comm *)
+  -> EXTERN: (423,3) MPI_Comm_rank(MPI_Comm, int *)
+  -> EXTERN: (426,5) MPI_Reduce(const void *, void *, int, MPI_Datatype, MPI_Op, int, MPI_Comm)
+  -> EXTERN: (429,5) MPI_Reduce(const void *, void *, int, MPI_Datatype, MPI_Op, int, MPI_Comm)
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at qhg_fast_baryons.c(32,5) inlined into qhg_fast_baryons.c(397,5)
+   remark #25095: Loop Interchange not done due to: User Function Inside Loop Nest
+   remark #25451: Advice: Loop Interchange, if possible, might help loopnest. Suggested Permutation : ( 1 2 3 4 5 6 7 ) --> ( 7 2 3 4 5 6 1 ) 
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at qhg_fast_baryons.c(33,7) inlined into qhg_fast_baryons.c(397,5)
+      remark #15542: loop was not vectorized: inner loop was already vectorized
+
+      LOOP BEGIN at qhg_fast_baryons.c(34,9) inlined into qhg_fast_baryons.c(397,5)
+         remark #15542: loop was not vectorized: inner loop was already vectorized
+
+         LOOP BEGIN at qhg_fast_baryons.c(35,11) inlined into qhg_fast_baryons.c(397,5)
+            remark #15542: loop was not vectorized: inner loop was already vectorized
+
+            LOOP BEGIN at qhg_fast_baryons.c(36,13) inlined into qhg_fast_baryons.c(397,5)
+               remark #15542: loop was not vectorized: inner loop was already vectorized
+
+               LOOP BEGIN at qhg_fast_baryons.c(37,15) inlined into qhg_fast_baryons.c(397,5)
+                  remark #15542: loop was not vectorized: inner loop was already vectorized
+
+                  LOOP BEGIN at qhg_fast_baryons.c(38,17) inlined into qhg_fast_baryons.c(397,5)
+                     remark #15542: loop was not vectorized: inner loop was already vectorized
+
+                     LOOP BEGIN at qhg_fast_baryons.c(42,19) inlined into qhg_fast_baryons.c(397,5)
+                        remark #15542: loop was not vectorized: inner loop was already vectorized
+
+                        LOOP BEGIN at qhg_fast_baryons.c(83,21) inlined into qhg_fast_baryons.c(397,5)
+                           remark #25427: Loop Statements Reordered
+                           remark #15300: LOOP WAS VECTORIZED
+                           remark #15449: unmasked aligned unit stride stores: 6 
+                           remark #15450: unmasked unaligned unit stride loads: 12 
+                           remark #15475: --- begin vector loop cost summary ---
+                           remark #15476: scalar loop cost: 189 
+                           remark #15477: vector loop cost: 39.500 
+                           remark #15478: estimated potential speedup: 4.760 
+                           remark #15488: --- end vector loop cost summary ---
+                        LOOP END
+
+                        LOOP BEGIN at qhg_fast_baryons.c(83,21) inlined into qhg_fast_baryons.c(397,5)
+                        <Remainder loop for vectorization>
+                        LOOP END
+
+                        LOOP BEGIN at qhg_fast_baryons.c(104,21) inlined into qhg_fast_baryons.c(397,5)
+                           remark #15300: LOOP WAS VECTORIZED
+                           remark #15448: unmasked aligned unit stride loads: 2 
+                           remark #15450: unmasked unaligned unit stride loads: 2 
+                           remark #15475: --- begin vector loop cost summary ---
+                           remark #15476: scalar loop cost: 42 
+                           remark #15477: vector loop cost: 15.000 
+                           remark #15478: estimated potential speedup: 2.750 
+                           remark #15487: type converts: 2 
+                           remark #15488: --- end vector loop cost summary ---
+                        LOOP END
+
+                        LOOP BEGIN at qhg_fast_baryons.c(104,21) inlined into qhg_fast_baryons.c(397,5)
+                        <Remainder loop for vectorization>
+                        LOOP END
+
+                        LOOP BEGIN at qhg_fast_baryons.c(108,21) inlined into qhg_fast_baryons.c(397,5)
+                           remark #15300: LOOP WAS VECTORIZED
+                           remark #15448: unmasked aligned unit stride loads: 2 
+                           remark #15450: unmasked unaligned unit stride loads: 2 
+                           remark #15475: --- begin vector loop cost summary ---
+                           remark #15476: scalar loop cost: 42 
+                           remark #15477: vector loop cost: 15.000 
+                           remark #15478: estimated potential speedup: 2.750 
+                           remark #15487: type converts: 2 
+                           remark #15488: --- end vector loop cost summary ---
+                        LOOP END
+
+                        LOOP BEGIN at qhg_fast_baryons.c(108,21) inlined into qhg_fast_baryons.c(397,5)
+                        <Remainder loop for vectorization>
+                        LOOP END
+
+                        LOOP BEGIN at qhg_fast_baryons.c(112,21) inlined into qhg_fast_baryons.c(397,5)
+                           remark #15300: LOOP WAS VECTORIZED
+                           remark #15448: unmasked aligned unit stride loads: 2 
+                           remark #15450: unmasked unaligned unit stride loads: 2 
+                           remark #15475: --- begin vector loop cost summary ---
+                           remark #15476: scalar loop cost: 42 
+                           remark #15477: vector loop cost: 15.000 
+                           remark #15478: estimated potential speedup: 2.750 
+                           remark #15487: type converts: 2 
+                           remark #15488: --- end vector loop cost summary ---
+                        LOOP END
+
+                        LOOP BEGIN at qhg_fast_baryons.c(112,21) inlined into qhg_fast_baryons.c(397,5)
+                        <Remainder loop for vectorization>
+                        LOOP END
+                     LOOP END
+                  LOOP END
+               LOOP END
+            LOOP END
+         LOOP END
+      LOOP END
+   LOOP END
+LOOP END
+
+LOOP BEGIN at qhg_fast_baryons.c(133,5) inlined into qhg_fast_baryons.c(400,5)
+   remark #25095: Loop Interchange not done due to: User Function Inside Loop Nest
+   remark #25451: Advice: Loop Interchange, if possible, might help loopnest. Suggested Permutation : ( 1 2 3 4 5 6 7 ) --> ( 7 2 1 3 4 6 5 ) 
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at qhg_fast_baryons.c(134,7) inlined into qhg_fast_baryons.c(400,5)
+      remark #15542: loop was not vectorized: inner loop was already vectorized
+
+      LOOP BEGIN at qhg_fast_baryons.c(135,9) inlined into qhg_fast_baryons.c(400,5)
+         remark #15542: loop was not vectorized: inner loop was already vectorized
+
+         LOOP BEGIN at qhg_fast_baryons.c(136,11) inlined into qhg_fast_baryons.c(400,5)
+            remark #15542: loop was not vectorized: inner loop was already vectorized
+
+            LOOP BEGIN at qhg_fast_baryons.c(137,13) inlined into qhg_fast_baryons.c(400,5)
+               remark #15542: loop was not vectorized: inner loop was already vectorized
+
+               LOOP BEGIN at qhg_fast_baryons.c(138,15) inlined into qhg_fast_baryons.c(400,5)
+                  remark #15542: loop was not vectorized: inner loop was already vectorized
+
+                  LOOP BEGIN at qhg_fast_baryons.c(139,17) inlined into qhg_fast_baryons.c(400,5)
+                     remark #15542: loop was not vectorized: inner loop was already vectorized
+
+                     LOOP BEGIN at qhg_fast_baryons.c(143,19) inlined into qhg_fast_baryons.c(400,5)
+                        remark #15542: loop was not vectorized: inner loop was already vectorized
+
+                        LOOP BEGIN at qhg_fast_baryons.c(170,21) inlined into qhg_fast_baryons.c(400,5)
+                           remark #25427: Loop Statements Reordered
+                           remark #15300: LOOP WAS VECTORIZED
+                           remark #15449: unmasked aligned unit stride stores: 2 
+                           remark #15450: unmasked unaligned unit stride loads: 8 
+                           remark #15475: --- begin vector loop cost summary ---
+                           remark #15476: scalar loop cost: 62 
+                           remark #15477: vector loop cost: 14.000 
+                           remark #15478: estimated potential speedup: 4.400 
+                           remark #15488: --- end vector loop cost summary ---
+                        LOOP END
+
+                        LOOP BEGIN at qhg_fast_baryons.c(170,21) inlined into qhg_fast_baryons.c(400,5)
+                        <Remainder loop for vectorization>
+                        LOOP END
+
+                        LOOP BEGIN at qhg_fast_baryons.c(180,21) inlined into qhg_fast_baryons.c(400,5)
+                           remark #15300: LOOP WAS VECTORIZED
+                           remark #15448: unmasked aligned unit stride loads: 2 
+                           remark #15450: unmasked unaligned unit stride loads: 2 
+                           remark #15475: --- begin vector loop cost summary ---
+                           remark #15476: scalar loop cost: 42 
+                           remark #15477: vector loop cost: 15.000 
+                           remark #15478: estimated potential speedup: 2.750 
+                           remark #15487: type converts: 2 
+                           remark #15488: --- end vector loop cost summary ---
+                        LOOP END
+
+                        LOOP BEGIN at qhg_fast_baryons.c(180,21) inlined into qhg_fast_baryons.c(400,5)
+                        <Remainder loop for vectorization>
+                        LOOP END
+                     LOOP END
+                  LOOP END
+               LOOP END
+            LOOP END
+         LOOP END
+      LOOP END
+   LOOP END
+LOOP END
+
+LOOP BEGIN at qhg_fast_baryons.c(200,5) inlined into qhg_fast_baryons.c(403,5)
+   remark #25095: Loop Interchange not done due to: User Function Inside Loop Nest
+   remark #25451: Advice: Loop Interchange, if possible, might help loopnest. Suggested Permutation : ( 1 2 3 4 5 6 7 ) --> ( 7 2 1 3 5 6 4 ) 
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at qhg_fast_baryons.c(201,7) inlined into qhg_fast_baryons.c(403,5)
+      remark #15542: loop was not vectorized: inner loop was already vectorized
+
+      LOOP BEGIN at qhg_fast_baryons.c(202,9) inlined into qhg_fast_baryons.c(403,5)
+         remark #15542: loop was not vectorized: inner loop was already vectorized
+
+         LOOP BEGIN at qhg_fast_baryons.c(203,11) inlined into qhg_fast_baryons.c(403,5)
+            remark #15542: loop was not vectorized: inner loop was already vectorized
+
+            LOOP BEGIN at qhg_fast_baryons.c(204,13) inlined into qhg_fast_baryons.c(403,5)
+               remark #15542: loop was not vectorized: inner loop was already vectorized
+
+               LOOP BEGIN at qhg_fast_baryons.c(205,15) inlined into qhg_fast_baryons.c(403,5)
+                  remark #15542: loop was not vectorized: inner loop was already vectorized
+
+                  LOOP BEGIN at qhg_fast_baryons.c(206,17) inlined into qhg_fast_baryons.c(403,5)
+                     remark #15542: loop was not vectorized: inner loop was already vectorized
+
+                     LOOP BEGIN at qhg_fast_baryons.c(210,19) inlined into qhg_fast_baryons.c(403,5)
+                        remark #15542: loop was not vectorized: inner loop was already vectorized
+
+                        LOOP BEGIN at qhg_fast_baryons.c(237,21) inlined into qhg_fast_baryons.c(403,5)
+                           remark #25427: Loop Statements Reordered
+                           remark #15300: LOOP WAS VECTORIZED
+                           remark #15449: unmasked aligned unit stride stores: 2 
+                           remark #15450: unmasked unaligned unit stride loads: 8 
+                           remark #15475: --- begin vector loop cost summary ---
+                           remark #15476: scalar loop cost: 62 
+                           remark #15477: vector loop cost: 14.000 
+                           remark #15478: estimated potential speedup: 4.400 
+                           remark #15488: --- end vector loop cost summary ---
+                        LOOP END
+
+                        LOOP BEGIN at qhg_fast_baryons.c(237,21) inlined into qhg_fast_baryons.c(403,5)
+                        <Remainder loop for vectorization>
+                        LOOP END
+
+                        LOOP BEGIN at qhg_fast_baryons.c(247,21) inlined into qhg_fast_baryons.c(403,5)
+                           remark #15300: LOOP WAS VECTORIZED
+                           remark #15448: unmasked aligned unit stride loads: 2 
+                           remark #15450: unmasked unaligned unit stride loads: 2 
+                           remark #15475: --- begin vector loop cost summary ---
+                           remark #15476: scalar loop cost: 42 
+                           remark #15477: vector loop cost: 15.000 
+                           remark #15478: estimated potential speedup: 2.750 
+                           remark #15487: type converts: 2 
+                           remark #15488: --- end vector loop cost summary ---
+                        LOOP END
+
+                        LOOP BEGIN at qhg_fast_baryons.c(247,21) inlined into qhg_fast_baryons.c(403,5)
+                        <Remainder loop for vectorization>
+                        LOOP END
+                     LOOP END
+                  LOOP END
+               LOOP END
+            LOOP END
+         LOOP END
+      LOOP END
+   LOOP END
+LOOP END
+
+LOOP BEGIN at qhg_fast_baryons.c(267,5) inlined into qhg_fast_baryons.c(406,5)
+   remark #25095: Loop Interchange not done due to: User Function Inside Loop Nest
+   remark #25451: Advice: Loop Interchange, if possible, might help loopnest. Suggested Permutation : ( 1 2 3 4 5 6 7 ) --> ( 7 1 2 3 5 6 4 ) 
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at qhg_fast_baryons.c(268,7) inlined into qhg_fast_baryons.c(406,5)
+      remark #15542: loop was not vectorized: inner loop was already vectorized
+
+      LOOP BEGIN at qhg_fast_baryons.c(269,9) inlined into qhg_fast_baryons.c(406,5)
+         remark #15542: loop was not vectorized: inner loop was already vectorized
+
+         LOOP BEGIN at qhg_fast_baryons.c(270,11) inlined into qhg_fast_baryons.c(406,5)
+            remark #15542: loop was not vectorized: inner loop was already vectorized
+
+            LOOP BEGIN at qhg_fast_baryons.c(271,13) inlined into qhg_fast_baryons.c(406,5)
+               remark #15542: loop was not vectorized: inner loop was already vectorized
+
+               LOOP BEGIN at qhg_fast_baryons.c(272,15) inlined into qhg_fast_baryons.c(406,5)
+                  remark #15542: loop was not vectorized: inner loop was already vectorized
+
+                  LOOP BEGIN at qhg_fast_baryons.c(273,17) inlined into qhg_fast_baryons.c(406,5)
+                     remark #15542: loop was not vectorized: inner loop was already vectorized
+
+                     LOOP BEGIN at qhg_fast_baryons.c(277,19) inlined into qhg_fast_baryons.c(406,5)
+                        remark #15542: loop was not vectorized: inner loop was already vectorized
+
+                        LOOP BEGIN at qhg_fast_baryons.c(304,21) inlined into qhg_fast_baryons.c(406,5)
+                           remark #25427: Loop Statements Reordered
+                           remark #15300: LOOP WAS VECTORIZED
+                           remark #15449: unmasked aligned unit stride stores: 2 
+                           remark #15450: unmasked unaligned unit stride loads: 8 
+                           remark #15475: --- begin vector loop cost summary ---
+                           remark #15476: scalar loop cost: 62 
+                           remark #15477: vector loop cost: 14.000 
+                           remark #15478: estimated potential speedup: 4.400 
+                           remark #15488: --- end vector loop cost summary ---
+                        LOOP END
+
+                        LOOP BEGIN at qhg_fast_baryons.c(304,21) inlined into qhg_fast_baryons.c(406,5)
+                        <Remainder loop for vectorization>
+                        LOOP END
+
+                        LOOP BEGIN at qhg_fast_baryons.c(315,21) inlined into qhg_fast_baryons.c(406,5)
+                           remark #15300: LOOP WAS VECTORIZED
+                           remark #15448: unmasked aligned unit stride loads: 2 
+                           remark #15450: unmasked unaligned unit stride loads: 2 
+                           remark #15475: --- begin vector loop cost summary ---
+                           remark #15476: scalar loop cost: 42 
+                           remark #15477: vector loop cost: 15.000 
+                           remark #15478: estimated potential speedup: 2.750 
+                           remark #15487: type converts: 2 
+                           remark #15488: --- end vector loop cost summary ---
+                        LOOP END
+
+                        LOOP BEGIN at qhg_fast_baryons.c(315,21) inlined into qhg_fast_baryons.c(406,5)
+                        <Remainder loop for vectorization>
+                        LOOP END
+                     LOOP END
+                  LOOP END
+               LOOP END
+            LOOP END
+         LOOP END
+      LOOP END
+   LOOP END
+LOOP END
+
+LOOP BEGIN at qhg_fast_baryons.c(335,5) inlined into qhg_fast_baryons.c(409,5)
+   remark #25095: Loop Interchange not done due to: User Function Inside Loop Nest
+   remark #25451: Advice: Loop Interchange, if possible, might help loopnest. Suggested Permutation : ( 1 2 3 4 5 6 7 ) --> ( 7 1 2 3 4 6 5 ) 
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at qhg_fast_baryons.c(336,7) inlined into qhg_fast_baryons.c(409,5)
+      remark #15542: loop was not vectorized: inner loop was already vectorized
+
+      LOOP BEGIN at qhg_fast_baryons.c(337,9) inlined into qhg_fast_baryons.c(409,5)
+         remark #15542: loop was not vectorized: inner loop was already vectorized
+
+         LOOP BEGIN at qhg_fast_baryons.c(338,11) inlined into qhg_fast_baryons.c(409,5)
+            remark #15542: loop was not vectorized: inner loop was already vectorized
+
+            LOOP BEGIN at qhg_fast_baryons.c(339,13) inlined into qhg_fast_baryons.c(409,5)
+               remark #15542: loop was not vectorized: inner loop was already vectorized
+
+               LOOP BEGIN at qhg_fast_baryons.c(340,15) inlined into qhg_fast_baryons.c(409,5)
+                  remark #15542: loop was not vectorized: inner loop was already vectorized
+
+                  LOOP BEGIN at qhg_fast_baryons.c(341,17) inlined into qhg_fast_baryons.c(409,5)
+                     remark #15542: loop was not vectorized: inner loop was already vectorized
+
+                     LOOP BEGIN at qhg_fast_baryons.c(345,19) inlined into qhg_fast_baryons.c(409,5)
+                        remark #15542: loop was not vectorized: inner loop was already vectorized
+
+                        LOOP BEGIN at qhg_fast_baryons.c(369,21) inlined into qhg_fast_baryons.c(409,5)
+                           remark #15300: LOOP WAS VECTORIZED
+                           remark #15449: unmasked aligned unit stride stores: 2 
+                           remark #15450: unmasked unaligned unit stride loads: 4 
+                           remark #15475: --- begin vector loop cost summary ---
+                           remark #15476: scalar loop cost: 32 
+                           remark #15477: vector loop cost: 7.000 
+                           remark #15478: estimated potential speedup: 4.330 
+                           remark #15488: --- end vector loop cost summary ---
+                        LOOP END
+
+                        LOOP BEGIN at qhg_fast_baryons.c(369,21) inlined into qhg_fast_baryons.c(409,5)
+                        <Remainder loop for vectorization>
+                           remark #15301: REMAINDER LOOP WAS VECTORIZED
+                        LOOP END
+
+                        LOOP BEGIN at qhg_fast_baryons.c(369,21) inlined into qhg_fast_baryons.c(409,5)
+                        <Remainder loop for vectorization>
+                        LOOP END
+
+                        LOOP BEGIN at qhg_fast_baryons.c(376,21) inlined into qhg_fast_baryons.c(409,5)
+                           remark #15300: LOOP WAS VECTORIZED
+                           remark #15448: unmasked aligned unit stride loads: 2 
+                           remark #15450: unmasked unaligned unit stride loads: 2 
+                           remark #15475: --- begin vector loop cost summary ---
+                           remark #15476: scalar loop cost: 42 
+                           remark #15477: vector loop cost: 15.000 
+                           remark #15478: estimated potential speedup: 2.750 
+                           remark #15487: type converts: 2 
+                           remark #15488: --- end vector loop cost summary ---
+                        LOOP END
+
+                        LOOP BEGIN at qhg_fast_baryons.c(376,21) inlined into qhg_fast_baryons.c(409,5)
+                        <Remainder loop for vectorization>
+                        LOOP END
+                     LOOP END
+                  LOOP END
+               LOOP END
+            LOOP END
+         LOOP END
+      LOOP END
+   LOOP END
+LOOP END
+
+
+Non-optimizable loops:
+
+
+LOOP BEGIN at qhg_fast_baryons.c(31,3) inlined into qhg_fast_baryons.c(397,5)
+   remark #15341: loop was not vectorized: nonstandard loop is not a vectorization candidate
+LOOP END
+
+LOOP BEGIN at qhg_fast_baryons.c(132,3) inlined into qhg_fast_baryons.c(400,5)
+   remark #15341: loop was not vectorized: nonstandard loop is not a vectorization candidate
+LOOP END
+
+LOOP BEGIN at qhg_fast_baryons.c(199,3) inlined into qhg_fast_baryons.c(403,5)
+   remark #15341: loop was not vectorized: nonstandard loop is not a vectorization candidate
+LOOP END
+
+LOOP BEGIN at qhg_fast_baryons.c(266,3) inlined into qhg_fast_baryons.c(406,5)
+   remark #15341: loop was not vectorized: nonstandard loop is not a vectorization candidate
+LOOP END
+
+LOOP BEGIN at qhg_fast_baryons.c(334,3) inlined into qhg_fast_baryons.c(409,5)
+   remark #15341: loop was not vectorized: nonstandard loop is not a vectorization candidate
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+qhg_fast_baryons.c(391,3):remark #34014: optimization advice for memset: increase the destination's alignment to 16 (and use __assume_aligned) to speed up library implementation
+qhg_fast_baryons.c(391,3):remark #34026: call to memset implemented as a call to optimized library version
+qhg_fast_baryons.c(409,5):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (16, 0), and destination (alignment, offset): (16, 0)
+qhg_fast_baryons.c(434,10):remark #34014: optimization advice for memcpy: increase the destination's alignment to 16 (and use __assume_aligned) to increase the width of stores
+qhg_fast_baryons.c(434,10):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (16, 0), and destination (alignment, offset): (1, 0)
+qhg_fast_baryons.c(406,5):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (16, 0), and destination (alignment, offset): (16, 0)
+qhg_fast_baryons.c(403,5):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (16, 0), and destination (alignment, offset): (16, 0)
+qhg_fast_baryons.c(400,5):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (16, 0), and destination (alignment, offset): (16, 0)
+qhg_fast_baryons.c(397,5):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (16, 0), and destination (alignment, offset): (16, 0)
+===========================================================================
+
+Begin optimization report for: qhg_baryons_open_correlator_finalize(qhg_baryons_open_correlator)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (qhg_baryons_open_correlator_finalize(qhg_baryons_open_correlator)) [7] qhg_fast_baryons.c(439,1)
+  -> EXTERN: (440,3) free(void *)
+
+===========================================================================
+
+Begin optimization report for: qhg_write_baryons_open_correlator(char *, qhg_baryons_open_correlator, char *)
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (qhg_write_baryons_open_correlator(char *, qhg_baryons_open_correlator, char *)) [8] qhg_fast_baryons.c(447,1)
+  -> EXTERN: (457,3) MPI_Comm_split(MPI_Comm, int, int, MPI_Comm *)
+  -> EXTERN: (463,21) ?1memset
+  -> EXTERN: (464,19) ?1memcpy
+  -> EXTERN: (465,20) ?1memcpy
+  -> EXTERN: (467,19) H5Pcreate(hid_t)
+  -> EXTERN: (467,29) H5open(void)
+  -> EXTERN: (468,3) H5Pset_fapl_mpio(hid_t, MPI_Comm, MPI_Info)
+  -> EXTERN: (470,7) access(const char *, int)
+  -> EXTERN: (471,15) H5Fopen(const char *, unsigned int, hid_t)
+  -> EXTERN: (471,30) H5check_version(unsigned int, unsigned int, unsigned int)
+  -> EXTERN: (473,15) H5Fcreate(const char *, unsigned int, hid_t, hid_t)
+  -> EXTERN: (473,32) H5check_version(unsigned int, unsigned int, unsigned int)
+  -> EXTERN: (474,3) H5Pclose(hid_t)
+  -> EXTERN: (476,19) H5Pcreate(hid_t)
+  -> EXTERN: (476,29) H5open(void)
+  -> EXTERN: (477,3) H5Pset_create_intermediate_group(hid_t, unsigned int)
+  -> EXTERN: (478,18) H5Gcreate2(hid_t, const char *, hid_t, hid_t, hid_t)
+  -> EXTERN: (486,22) H5Screate_simple(int, const hsize_t *, const hsize_t *)
+  -> EXTERN: (487,19) H5Acreate2(hid_t, const char *, hid_t, hid_t, hid_t, hid_t)
+  -> EXTERN: (487,46) H5open(void)
+  -> EXTERN: (488,3) H5Awrite(hid_t, hid_t, const void *)
+  -> EXTERN: (488,21) H5open(void)
+  -> EXTERN: (489,3) H5Aclose(hid_t)
+  -> EXTERN: (490,3) H5Sclose(hid_t)
+  -> EXTERN: (492,16) ?1memcpy
+  -> EXTERN: (493,16) H5Screate(H5S_class_t)
+  -> EXTERN: (494,19) H5Tcopy(hid_t)
+  -> EXTERN: (494,27) H5open(void)
+  -> EXTERN: (495,3) H5Tset_size(hid_t, size_t)
+  -> EXTERN: (495,24) strlen(const char *)
+  -> EXTERN: (496,13) H5Acreate1(hid_t, const char *, hid_t, hid_t, hid_t)
+  -> EXTERN: (497,3) H5Awrite(hid_t, hid_t, const void *)
+  -> EXTERN: (499,3) H5Aclose(hid_t)
+  -> EXTERN: (500,3) H5Tclose(hid_t)
+  -> EXTERN: (501,3) H5Sclose(hid_t)
+  -> EXTERN: (504,21) H5Screate_simple(int, const hsize_t *, const hsize_t *)
+  -> EXTERN: (505,22) H5Dcreate2(hid_t, const char *, hid_t, hid_t, hid_t, hid_t, hid_t)
+  -> EXTERN: (505,48) H5open(void)
+  -> EXTERN: (506,20) H5Screate_simple(int, const hsize_t *, const hsize_t *)
+  -> EXTERN: (507,15) H5Dget_space(hid_t)
+  -> EXTERN: (508,3) H5Sselect_hyperslab(hid_t, H5S_seloper_t, const hsize_t *, const hsize_t *, const hsize_t *, const hsize_t *)
+  -> EXTERN: (509,20) H5Pcreate(hid_t)
+  -> EXTERN: (509,30) H5open(void)
+  -> EXTERN: (510,3) H5Pset_dxpl_mpio(hid_t, H5FD_mpio_xfer_t)
+  -> EXTERN: (511,19) H5Dwrite(hid_t, hid_t, hid_t, hid_t, hid_t, const void *)
+  -> EXTERN: (511,40) H5open(void)
+  -> EXTERN: (512,3) H5Dclose(hid_t)
+  -> EXTERN: (513,3) H5Sclose(hid_t)
+  -> EXTERN: (514,3) H5Sclose(hid_t)
+  -> EXTERN: (515,3) H5Pclose(hid_t)
+  -> EXTERN: (516,3) H5Pclose(hid_t)
+  -> EXTERN: (517,3) H5Gclose(hid_t)
+  -> EXTERN: (518,3) H5Fclose(hid_t)
+  -> EXTERN: (519,3) MPI_Comm_free(MPI_Comm *)
+
+
+    Report from: Code generation optimizations [cg]
+
+qhg_fast_baryons.c(463,21):remark #34000: call to memset implemented inline with stores with proven (alignment, offset): (16, 0)
+qhg_fast_baryons.c(464,19):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (32, 0), and destination (alignment, offset): (16, 0)
+qhg_fast_baryons.c(465,20):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (32, 0), and destination (alignment, offset): (16, 0)
+qhg_fast_baryons.c(492,16):remark #34000: call to memcpy implemented inline with loads and stores with proven source (alignment, offset): (16, 0), and destination (alignment, offset): (16, 0)
+===========================================================================

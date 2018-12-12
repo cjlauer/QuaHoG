@@ -31,7 +31,7 @@ qhg_point_spinor_field(qhg_spinor_field sp, int coords[ND], int spin, int color)
   unsigned long int lidx = IDX(lc, ldims);
 
   /* Set source to zero on all procs */
-  memset(sp.field, '\0', lvol*NC*NS*sizeof(_Complex double));
+  memset(sp.field, 0, lvol*NC*NS*sizeof(_Complex double));
 
   /* Set spinor to 1 at [coords,spin,color] */
   if(proc_id == s_proc)
