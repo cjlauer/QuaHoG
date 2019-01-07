@@ -21,6 +21,7 @@ SOURCES=\
 	qhg_alloc			\
 	qhg_stop_watch			\
 	qhg_gauge_field			\
+	qhg_gluon_loop			\
 	qhg_spinor_field		\
 	qhg_correlator			\
 	qhg_xchange_gauge		\

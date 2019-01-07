@@ -47,6 +47,11 @@ typedef struct {
 } qhg_gauge_field;
 
 typedef struct {
+  _Complex double *loop;
+  qhg_lattice *lat;
+} qhg_gluon_loop;
+
+typedef struct {
   _Complex double *field;
   _Complex double *bnd[2*ND];
   _Complex double *edge[2*ND][2*ND];
