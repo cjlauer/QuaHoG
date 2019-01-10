@@ -7,7 +7,6 @@
 #include <qhg_su3_ops.h>
 #include <qhg_xchange_gauge.h>
 #include <qhg_alloc.h>
-#include <qhg_gluon_loop.h>
 
 #define G(v,mu) (((v)*ND + mu)*NC*NC)
 

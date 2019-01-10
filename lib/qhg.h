@@ -18,6 +18,7 @@
 #include <qhg_point_spinor_field.h>
 #include <qhg_plaquette.h>
 #include <qhg_ape_smear.h>
+#include <qhg_stout_smear.h>
 #include <qhg_gauss_smear.h>
 #include <qhg_mom_list.h>
 #include <qhg_mesons.h>
@@ -37,6 +38,7 @@
 #include <qhg_prop_field_linalg.h>
 #include <qhg_io_utils.h>
 #include <qhg_correlator_shift.h>
+#include <qhg_gluon_loop.h>
 #include <qhg_ft.h>
 
 #endif /* _QHG_H */

@@ -38,6 +38,7 @@ SOURCES=\
 	qhg_nucleons			\
 	qhg_write_nucleons		\
 	qhg_ape_smear			\
+	qhg_stout_smear			\
 	qhg_su3_project			\
 	qhg_gauss_smear			\
 	qhg_io_utils			\
