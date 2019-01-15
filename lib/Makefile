@@ -33,6 +33,7 @@ SOURCES=\
 	qhg_mom_list			\
 	qhg_mesons			\
 	qhg_write_mesons		\
+	qhg_write_gluon_loops		\
 	qhg_mesons_udsc			\
 	qhg_write_mesons_udsc		\
 	qhg_nucleons			\

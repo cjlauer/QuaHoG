@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 #include <mpi.h>
@@ -16,7 +17,7 @@ qhg_gluon_loop_init(qhg_lattice *lat)
   unsigned long int lvol = lat->lvol;
 
   qhg_gluon_loop gl;
-  gl.loop = qhg_alloc(lvol*sizeof(double));
+  gl.loop = qhg_alloc(lvol*sizeof(_Complex double));
     
   gl.lat = lat;
   return gl;
@@ -34,11 +35,11 @@ void
 qhg_gluon_loop_copy(qhg_gluon_loop y, qhg_gluon_loop x)
 {
   y.lat = x.lat;
-  memcpy(y.loop, x.loop, x.lat->lvol*sizeof(double));
+  memcpy(y.loop, x.loop, x.lat->lvol*sizeof(_Complex double));
   return;
 }
 
-static double
+static _Complex double
 gluon_plaq(_Complex double *U, unsigned long int **nn, unsigned long int v00, int mu, int nu)
 {
   double plaq = 0.0;
@@ -55,15 +56,17 @@ gluon_plaq(_Complex double *U, unsigned long int **nn, unsigned long int v00, in
   su3_mul_ud(y, x, u2);
   su3_mul_ud(x, y, u3);	
       
-  return creal(su3_linalg_trace_u(x));
+  return su3_linalg_trace_u(x);
 }
 
-qhg_gluon_loop
-qhg_calculate_gluon_loop(qhg_gauge_field gf)
+void
+qhg_calculate_gluon_loop(qhg_gluon_loop out, qhg_gauge_field gf)
 {
   qhg_lattice *lat = gf.lat;
+  qhg_comms *comms = lat->comms;
+
   _Complex double *U = gf.field;
-  
+
   qhg_xchange_gauge(gf);
 
   unsigned long int lvol = lat->lvol;
@@ -81,6 +84,10 @@ qhg_calculate_gluon_loop(qhg_gauge_field gf)
     
     }
 
-  return gl;
+  qhg_gluon_loop_copy(out, gl);
+
+  qhg_gluon_loop_finalize(gl);
+
+  return;
 }
   

@@ -23,6 +23,7 @@
 #include <qhg_mom_list.h>
 #include <qhg_mesons.h>
 #include <qhg_write_mesons.h>
+#include <qhg_write_gluon_loops.h>
 #include <qhg_mesons_udsc.h>
 #include <qhg_write_mesons_udsc.h>
 #include <qhg_nucleons.h>

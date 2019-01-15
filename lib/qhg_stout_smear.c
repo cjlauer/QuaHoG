@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 
 #include <complex.h>
@@ -9,6 +10,22 @@
 #include <math.h>
 
 #define G(v,mu) (((v)*ND + mu)*NC*NC)
+
+void qhg_print3x3(_Complex double *M){
+
+  for(int i=0; i<NC; i++){
+    for(int j=0; j<NC; j++){
+      printf("%+f%+fi, ", creal(M[CC(i,j)]), cimag(M[CC(i,j)]));
+      fflush(stdout);
+    }
+    printf("\n");
+    fflush(stdout);
+  }	   
+  printf("\n");
+  fflush(stdout);
+      
+  return;
+}
 
 /* needed function for the exponentiation */
 double qhg_xi0(double w)
@@ -35,8 +52,8 @@ void qhg_exp(_Complex double *M)
 
   _Complex double M2[NC*NC],M3[NC*NC],sum[NC*NC],sum1[NC*NC];
 
-  _Complex double one[NC*NC] = { 1.0, 0.0, 0.0, \
-				 0.0, 1.0, 0.0,	\
+  _Complex double one[NC*NC] = { 1.0, 0.0, 0.0,
+				 0.0, 1.0, 0.0,
 				 0.0, 0.0, 1.0 };
   _Complex double C,C1;
   _Complex double tmp,tmp1;
@@ -51,9 +68,10 @@ void qhg_exp(_Complex double *M)
 
   c0=su3_linalg_trace_u(M3);
   c1=su3_linalg_trace_u(M2);
+
   c0 = creal(c0)/3.0 + I*cimag(c0);
   c1 = creal(c1)/2.0 + I*cimag(c1);
-
+  
   if(creal(c0)<0){
     sign=1;
     c0 = -creal(c0) + I*cimag(c0);
@@ -141,7 +159,7 @@ qhg_stout_smear_iter(qhg_gauge_field out, qhg_gauge_field in, double omega)
       su3_linalg_zero(staple);
 
       /* create the staple term for this mu direction */
-      for(int nu=(mu==0?1:0); nu<ND; nu==mu-1?nu+=2:nu++)	{
+      for(int nu=(mu==0?1:0); nu<ND; nu==mu-1?nu+=2:nu++){
       	unsigned long int vp0 = nn[mu][v00];
       	unsigned long int v0p = nn[nu][v00];
       	unsigned long int v0m = nn[nu+ND][v00];	
@@ -183,9 +201,10 @@ qhg_stout_smear_iter(qhg_gauge_field out, qhg_gauge_field in, double omega)
       
       /* calculate trace term of Q 
        i/2/NC * tr(Omega^+ - Omega) */
-      _Complex double trace = I/2/NC * su3_linalg_trace_u(u1);
+      _Complex double trace = su3_linalg_trace_u(u1);
       _Complex double atrace[NC] = {trace, trace, trace};
-      su3_linalg_diag(w, atrace);
+      su3_linalg_diag(u2, atrace);
+      su3_linalg_au(I/2/NC, u2);
 
       /* multiply (Omega^+ - Omega) by i/2 */
 
@@ -194,16 +213,16 @@ qhg_stout_smear_iter(qhg_gauge_field out, qhg_gauge_field in, double omega)
       /* calculate Q 
        Q = i/2*(Omega^+ - Omega) - i/2/NC*tr(Omega^+ - Omega) */
 
-      su3_linalg_umeqv(u1, w);
+      su3_linalg_umeqv(u1, u2);
 
       /* calculate exp(iQ) */
 
-      su3_linalg_au(I,u1);
       qhg_exp( u1 );
 
       /* Multiply exp(iQ) by U */
 
       su3_mul_uu(u1, u1, u0);
+
     }
 #ifdef QHG_OMP
   }
