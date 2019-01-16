@@ -287,7 +287,8 @@ qhg_nn_thrp_der(qhg_spinor_field fwd[NS*NC], qhg_spinor_field bwd[NS*NC], qhg_ga
     }
 
     // Position space or momentum space
-    if(thrp_sink.corr_space == POS_SPACE) {
+    //if(thrp_sink.corr_space == POS_SPACE) {
+    if(true) {
       /*
        * The same term needs to be summed in all the sites of the kind
        * Order 1: 0, +A

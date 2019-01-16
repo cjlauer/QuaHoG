@@ -41,6 +41,7 @@
 #include <qhg_write_nn_thrp_der2.h>
 #include <qhg_nn_thrp_der.h>
 #include <qhg_write_nn_thrp_der.h>
+#include <qhg_write_mesons_thrp_der.h>
 #include <qhg_prop_field_linalg.h>
 #include <qhg_io_utils.h>
 #include <qhg_correlator_shift.h>

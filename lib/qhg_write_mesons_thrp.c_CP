@@ -32,11 +32,46 @@ qhg_write_mesons_thrp(char fname[], qhg_thrp_correlator corr_thrp, char group[])
   hsize_t dims[ND+1] = {d[0], d[1], d[2], d[3], 2};
   hsize_t ldims[ND+1] = {ld[0], ld[1], ld[2], ld[3], 2};
 
+  /*
+    We will only save the set of time-slices between [source, sink]
+  */
   {
     int t0 = corr_thrp.corr.origin[0];
+    int dt = corr_thrp.dt;
+    int ts = t0 + dt;
     int Lt = dims[0];
     int lt = ldims[0];
     int t_proc_t0 = t0/lt;		/* t-rank of processes with the source time-slice */
+    int t_proc_ts = ((ts%Lt)/lt)%pd[0]; /* t-rank of processes with the sink time-slice */
+    /* dims[] and ldims[] will be the global and local dimensions of the source-to-sink data chunck */
+    dims[0] = dt+1;
+    ldims[0] = 0;
+    if(pc[0] == t_proc_t0)
+      ldims[0] = lt;
+
+    /* If this is one of the processes with the sink time-slice */
+    if(pc[0] == t_proc_ts)
+      ldims[0] = lt;
+    
+    /* Start from the ranks with t0 and iterate up to the ranks with ts */
+    int r = t_proc_t0;
+    while(r != t_proc_ts) {
+      if(pc[0] == r)
+  	ldims[0] = lt;
+      r = (r+1) % pd[0];
+    }
+    /* All participating ranks now have the local t-dimension set to
+       lt, for everyone else it is set to 0. Now adjust the local
+       t-dimension of the edge ranks, i.e. the one with t0 and the one
+       with ts */
+    if(pc[0] == t_proc_t0)
+      ldims[0] = lt-t0%lt;
+    
+    if(pc[0] == t_proc_ts)
+      ldims[0] = ldims[0] - (lt-ts%lt) + 1;
+
+    if((pc[0] == t_proc_ts) && (pc[0] == t_proc_t0))
+      ldims[0] = dt+1;
     
     /* Now find the t-index of the chunck that is to be written which
        each rank starts from */

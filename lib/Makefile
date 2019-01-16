@@ -55,6 +55,7 @@ SOURCES=\
 	qhg_write_nn_thrp		\
 	qhg_nn_thrp_der2		\
 	qhg_write_nn_thrp_der		\
+	qhg_write_mesons_thrp_der	\
 	qhg_write_nn_thrp_der2		\
 	qhg_prop_field_linalg		\
 	qhg_ft				\
