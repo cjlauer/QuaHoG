@@ -116,14 +116,14 @@ qhg_der_correlator qhg_avg_der_combos_der2(qhg_der_correlator in) {
   return out;
 }
 
-qhg_der_correlator qhg_avg_der_combos_der3(qhg_der_correlator in, int px, int py, int pz) {
+qhg_der_correlator qhg_avg_der_combos_der3(qhg_der_correlator in, int *mom_vec) {
 
   size_t site_size;
   int ncorr;
   qhg_der_correlator out;
 
   int c =0;
-  if( px == 0 || py == 0 || pz == 0 ){
+  if( mom_vec[0] == 0 || mom_vec[1] == 0 || mom_vec[2] == 0 ){
 
     site_size = 1;
     ncorr = 6;
@@ -156,14 +156,14 @@ qhg_der_correlator qhg_avg_der_combos_der3(qhg_der_correlator in, int px, int py
   return out;
 }
 
-qhg_der_correlator qhg_avg_der_combos(qhg_der_correlator in, int px, int py, int pz) {
+qhg_der_correlator qhg_avg_der_combos(qhg_der_correlator in, int *mom_vec) {
 
   qhg_der_correlator out;
 
   if(in.der_order == 2)
     out = qhg_avg_der_combos_der2(in);
   else if(in.der_order == 3)
-    out = qhg_avg_der_combos_der3(in, px, py, pz);
+    out = qhg_avg_der_combos_der3(in, mom_vec);
   else {
     fprintf(stderr, "ERROR: derivative order not supported.");
   }
