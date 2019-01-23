@@ -36,7 +36,7 @@ qhg_write_mesons_thrp(char fname[], qhg_thrp_correlator corr_thrp, char group[])
     int t0 = corr_thrp.corr.origin[0];
     int Lt = dims[0];
     int lt = ldims[0];
-    int t_proc_t0 = t0/lt;		/* t-rank of processes with the source time-slice */
+    int t_proc_t0 = t0/lt; /* t-rank of processes with the source time-slice */
     
     /* Now find the t-index of the chunck that is to be written which
        each rank starts from */

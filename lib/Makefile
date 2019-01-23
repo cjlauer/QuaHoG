@@ -28,6 +28,7 @@ SOURCES=\
 	qhg_fast_mesons			\
 	qhg_fast_baryons		\
 	qhg_correlator			\
+	qhg_der_correlator		\
 	qhg_xchange_gauge		\
 	qhg_xchange_spinor		\
 	qhg_import_gauge_field		\
@@ -35,10 +36,9 @@ SOURCES=\
 	qhg_point_spinor_field		\
 	qhg_plaquette			\
 	qhg_mom_list			\
-	qhg_mesons			\
-	qhg_write_mesons		\
 	qhg_write_mesons_thrp           \
 	qhg_mesons_udsc			\
+	qhg_write_mesons		\
 	qhg_write_mesons_udsc		\
 	qhg_nucleons			\
 	qhg_write_nucleons		\
@@ -61,10 +61,9 @@ SOURCES=\
 	qhg_ft				\
 	qhg_nn_sequential_sink		\
 	qhg_conjugate_thrp              \
+	qhg_avg_der_combos		\
 	qhg_correlator_shift
-
 include $(wildcard *.d)
-
 libqhg.a: ${addsuffix .o, $(SOURCES)}
 	$(E) LD $@
 	$(C)$(AR) cr $@  ${addsuffix .o, $(SOURCES)}

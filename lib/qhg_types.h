@@ -162,6 +162,7 @@ typedef struct {
 typedef struct {
   _Complex double **C;
   size_t site_size;
+  size_t vol_size;
   int *origin;
   qhg_mom_list *mom_list;
   qhg_lattice *lat;  
