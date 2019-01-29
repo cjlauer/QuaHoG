@@ -47,6 +47,6 @@ void qhg_avg_der_combos_O_mu_nu_rho_sig(_Complex double *, _Complex double **, i
 
 qhg_der_correlator qhg_avg_der_combos_der2(qhg_der_correlator);
 
-qhg_der_correlator qhg_avg_der_combos_der3(qhg_der_correlator, int, int, int);
+qhg_der_correlator qhg_avg_der_combos_der3(qhg_der_correlator, int *);
 
-qhg_der_correlator qhg_avg_der_combos(qhg_der_correlator, int, int, int);
+qhg_der_correlator qhg_avg_der_combos(qhg_der_correlator, int *);

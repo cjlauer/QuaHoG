@@ -126,6 +126,7 @@ qhg_nn_thrp_der(qhg_spinor_field fwd[NS*NC], qhg_spinor_field bwd[NS*NC], qhg_ga
     vol_size = lat->lvol;
     corr.mom_list = NULL;
   }
+  corr.vol_size = vol_size;
   corr.C = qhg_alloc(corr.ncorr*sizeof(_Complex double *));
   for(int i=0; i<corr.ncorr; i++) { 
     corr.C[i]=NULL;

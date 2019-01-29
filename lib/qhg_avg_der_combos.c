@@ -26,7 +26,7 @@ void qhg_avg_der_combos_O_0_i_j(_Complex double *out, _Complex double **in,
 
     out[v] = ( in[DD(i,j)][VG(v,0+2)] 
 	       + in[DD(j,i)][VG(v,0+2)] 
-	       + in[DD(0,j)][VG(v,i)] 
+	       + in[DD(0,j)][VG(v,i+2)] 
 	       + in[DD(j,0)][VG(v,i+2)] 
 	       + in[DD(0,i)][VG(v,j+2)] 
 	       + in[DD(i,0)][VG(v,j+2)] ) / 6;
@@ -104,7 +104,7 @@ qhg_der_correlator qhg_avg_der_combos_der2(qhg_der_correlator in) {
   size_t site_size = 1;
   int ncorr = 3;
 
-  qhg_der_correlator out = qhg_averaged_der_correlator_init(site_size, in.lat, in.mom_list, ncorr);
+  qhg_der_correlator out = qhg_averaged_der_correlator_init(site_size, in.lat, in.mom_list, ncorr, in.der_order);
 
   int c =0;
   for(int i=1; i<ND; i++)
@@ -112,6 +112,16 @@ qhg_der_correlator qhg_avg_der_combos_der2(qhg_der_correlator in) {
       qhg_avg_der_combos_O_0_i_j(out.C[c], in.C, i, j, in.vol_size);
       c++;
     }
+
+  if(in.mom_list == NULL) {
+    for(int i=0; i<ND; i++)
+      out.origin[i] = in.origin[i];
+  } else {
+    out.origin[0] = in.origin[0];
+  }
+  out.dt = in.dt;
+  out.flav = in.flav;
+  out.proj = in.proj;
 
   return out;
 }
@@ -127,8 +137,8 @@ qhg_der_correlator qhg_avg_der_combos_der3(qhg_der_correlator in, int *mom_vec) 
 
     site_size = 1;
     ncorr = 6;
-
-    out = qhg_averaged_der_correlator_init(site_size, in.lat, in.mom_list, ncorr);
+    
+    out = qhg_averaged_der_correlator_init(site_size, in.lat, in.mom_list, ncorr, in.der_order);
 
     for(int mu=0; mu<ND; mu++)
       for(int nu=mu+1; nu<ND; nu++){
@@ -141,7 +151,7 @@ qhg_der_correlator qhg_avg_der_combos_der3(qhg_der_correlator in, int *mom_vec) 
     site_size = 1;
     ncorr = 7;
 
-    out = qhg_averaged_der_correlator_init(site_size, in.lat, in.mom_list, ncorr);
+    out = qhg_averaged_der_correlator_init(site_size, in.lat, in.mom_list, ncorr, in.der_order);
 
     for(int mu=0; mu<ND; mu++)
       for(int nu=mu+1; nu<ND; nu++){
@@ -152,6 +162,9 @@ qhg_der_correlator qhg_avg_der_combos_der3(qhg_der_correlator in, int *mom_vec) 
     qhg_avg_der_combos_O_mu_nu_rho_sig(out.C[c], in.C, 
 				       0, 1, 2, 3, in.vol_size);
   }
+  out.dt = in.dt;
+  out.flav = in.flav;
+  out.proj = in.proj;
 
   return out;
 }
@@ -165,7 +178,7 @@ qhg_der_correlator qhg_avg_der_combos(qhg_der_correlator in, int *mom_vec) {
   else if(in.der_order == 3)
     out = qhg_avg_der_combos_der3(in, mom_vec);
   else {
-    fprintf(stderr, "ERROR: derivative order not supported.");
+    fprintf(stderr, "ERROR: derivative order not supported for averaging.\n");
   }
 
   return out;

@@ -93,7 +93,6 @@ qhg_write_mesons_thrp_der(char fname[], qhg_der_correlator corr, char group[])
         2) the index order in the file [string]
         3) source-sink separation [single integer]
         4) flavor [string]
-        5) projector [string]
       */
       {
         hsize_t n = 4;
@@ -139,7 +138,7 @@ qhg_write_mesons_thrp_der(char fname[], qhg_der_correlator corr, char group[])
 	default:
 	  fprintf(stderr, " Flavor %s is not supported\n", corr.flav);
 	  exit(3);
-	break;
+	  break;
         }      
         hid_t attrdat_id = H5Screate(H5S_SCALAR);
         hid_t type_id = H5Tcopy(H5T_C_S1);
@@ -192,9 +191,9 @@ qhg_write_mesons_averaged_thrp_der(char fname[], qhg_der_correlator corr, char g
   int der_order = corr.der_order;
 
   unsigned long int offset = 0;
-  hsize_t starts[ND+2] = {pc[0]*ld[0], pc[1]*ld[1], pc[2]*ld[2], pc[3]*ld[3], 0, 0};
-  hsize_t dims[ND+2] = {d[0], d[1], d[2], d[3], 16, 2};
-  hsize_t ldims[ND+2] = {ld[0], ld[1], ld[2], ld[3], 16, 2};
+  hsize_t starts[ND+1] = {pc[0]*ld[0], pc[1]*ld[1], pc[2]*ld[2], pc[3]*ld[3], 0};
+  hsize_t dims[ND+1] = {d[0], d[1], d[2], d[3], 2};
+  hsize_t ldims[ND+1] = {ld[0], ld[1], ld[2], ld[3], 2};
 
   {
     int t0 = corr.origin[0];
@@ -237,9 +236,15 @@ qhg_write_mesons_averaged_thrp_der(char fname[], qhg_der_correlator corr, char g
 			       '0','x','z',
 			       '0','y','z' };
       c_dirs = c_dirs_tmp;
+    /*
+    MPI_Barrier(lat->comms->comm);
+    if(am_io_proc)
+      printf("%s\n",c_dirs);
+    MPI_Barrier(lat->comms->comm);
+    */
     } 
     else {
-      printf("ERROR: Number of averaged derivative combination %d not supported for derivative order %d.", ncorr, der_order);
+      printf("ERROR: Number of averaged derivative combination %d not supported for derivative order %d.\n", ncorr, der_order);
       return;
     }
 
@@ -266,45 +271,38 @@ qhg_write_mesons_averaged_thrp_der(char fname[], qhg_der_correlator corr, char g
       c_dirs = c_dirs_tmp;
     } 
     else {
-      printf("ERROR: Number of averaged derivative combination %d not supported for derivative order %d.", ncorr, der_order);
+      printf("ERROR: Number of averaged derivative combination %d not supported for derivative order %d.\n", ncorr, der_order);
       return;
     }
 
   } 
   else {
 
-    printf("ERROR: derivative order %d not supported by write function", der_order);
+    printf("ERROR: derivative order %d not supported by write function\n", der_order);
     return;
 
   }
 
-  /*
-    Hierarchy is /insertion/ with insertions listed in the
-    qhg_nn_thrp_defs.h header file
-  */
-
   for( int c=0; c<ncorr; c++) {
-
-    char *group_tag, *tmp_tag;
-    asprintf(&tmp_tag, "der%d:g%c", der_order, c_dirs[(der_order+1)*c]);
-    for(int j=0; j<der_order; j++) {
-      asprintf(&tmp_tag, "%sD%c", group_tag, c_dirs[(der_order+1)*c+j+1]);
-      free(group_tag);
-      group_tag = tmp_tag;
-    }
-    hid_t group_id = H5Gcreate(top_id, group_tag, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-    free(group_tag);
-
-    /*
-      Attributes (metadata) are:
-      1) the origin (source position) [1-dimensional integer array of 4 elements]
-      2) the index order in the file [string]
-      3) source-sink separation [single integer]
-      4) flavor [string]
-      5) projector [string]
-    */
-
     if(corr.C[c] != NULL) {
+
+      char *group_tag, *tmp_tag;
+      asprintf(&group_tag, "der%d:g%c", der_order, c_dirs[(der_order+1)*c]);
+      for(int j=1; j<=der_order; j++) {
+	asprintf(&tmp_tag, "%sD%c", group_tag, c_dirs[(der_order+1)*c+j]);
+	free(group_tag);
+	group_tag = tmp_tag;
+      }
+      hid_t group_id = H5Gcreate(top_id, group_tag, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+      free(group_tag);
+
+      /*
+	Attributes (metadata) are:
+	1) the origin (source position) [1-dimensional integer array of 4 elements]
+	2) the index order in the file [string]
+	3) source-sink separation [single integer]
+	4) flavor [string]
+      */
 
       {
         hsize_t n = 4;
@@ -348,9 +346,9 @@ qhg_write_mesons_averaged_thrp_der(char fname[], qhg_der_correlator corr, char g
 	  flav = strdup("strange");
 	  break;
 	default:
-	  fprintf(stderr, " Flavor %s is not supported\n", corr.flav);
+	  fprintf(stderr, "Flavor %s is not supported\n", corr.flav);
 	  exit(3);
-	break;
+	  break;
         }      
         hid_t attrdat_id = H5Screate(H5S_SCALAR);
         hid_t type_id = H5Tcopy(H5T_C_S1);
@@ -365,13 +363,13 @@ qhg_write_mesons_averaged_thrp_der(char fname[], qhg_der_correlator corr, char g
       int lt = lat->ldims[0];
       unsigned long int lv3 = lat->lvol/(unsigned long int)lt;
       double *buf = ((double*) corr.C[c]) + offset*lv3*2;
-      hid_t filespace = H5Screate_simple(ND+2, dims, NULL);
+      hid_t filespace = H5Screate_simple(ND+1, dims, NULL);
       hid_t dataset_id = H5Dcreate(group_id, "corr_x", H5T_NATIVE_DOUBLE, filespace, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
       filespace = H5Dget_space(dataset_id);
       hid_t plist_id = H5Pcreate(H5P_DATASET_XFER);
       H5Pset_dxpl_mpio(plist_id, H5FD_MPIO_COLLECTIVE);
       H5Sselect_hyperslab(filespace, H5S_SELECT_SET, starts, NULL, ldims, NULL);
-      hid_t subspace = H5Screate_simple(ND+2, ldims, NULL);
+      hid_t subspace = H5Screate_simple(ND+1, ldims, NULL);
       herr_t status = H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, subspace, filespace, plist_id, buf);
       H5Dclose(dataset_id);
       H5Sclose(filespace);
@@ -380,9 +378,16 @@ qhg_write_mesons_averaged_thrp_der(char fname[], qhg_der_correlator corr, char g
       H5Gclose(group_id);
     }
   }
+  
   H5Pclose(lcpl_id);
   H5Gclose(top_id);
   H5Fclose(file_id);
 
+  /*
+  MPI_Barrier(lat->comms->comm);
+  if(am_io_proc)
+    printf("FLAG\n");
+  MPI_Barrier(lat->comms->comm);
+  */
   return;
 }
