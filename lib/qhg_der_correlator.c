@@ -141,7 +141,7 @@ qhg_der_correlator_finalize(qhg_der_correlator corr)
 {
   for(int i=0; i<corr.ncorr; i++)
     free(corr.C[i]);
-    corr.C = NULL;
+  corr.C = NULL;
   corr.lat = NULL;
   free(corr.origin);
   corr.origin = NULL;

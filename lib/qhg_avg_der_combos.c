@@ -106,7 +106,7 @@ qhg_der_correlator qhg_avg_der_combos_der2(qhg_der_correlator in) {
 
   qhg_der_correlator out = qhg_averaged_der_correlator_init(site_size, in.lat, in.mom_list, ncorr, in.der_order);
 
-  int c =0;
+  int c = 0;
   for(int i=1; i<ND; i++)
     for(int j=i+1; j<ND; j++){
       qhg_avg_der_combos_O_0_i_j(out.C[c], in.C, i, j, in.vol_size);
@@ -116,9 +116,12 @@ qhg_der_correlator qhg_avg_der_combos_der2(qhg_der_correlator in) {
   if(in.mom_list == NULL) {
     for(int i=0; i<ND; i++)
       out.origin[i] = in.origin[i];
+    out.mom_list = NULL;
   } else {
     out.origin[0] = in.origin[0];
+    out.mom_list = in.mom_list;
   }
+
   out.dt = in.dt;
   out.flav = in.flav;
   out.proj = in.proj;
@@ -128,40 +131,37 @@ qhg_der_correlator qhg_avg_der_combos_der2(qhg_der_correlator in) {
 
 qhg_der_correlator qhg_avg_der_combos_der3(qhg_der_correlator in, int *mom_vec) {
 
-  size_t site_size;
-  int ncorr;
-  qhg_der_correlator out;
+  size_t site_size = 1;
+  int ncorr = ( mom_vec[0] == 0 || mom_vec[1] == 0 || mom_vec[2] == 0 
+		? 6 : 7);
 
-  int c =0;
-  if( mom_vec[0] == 0 || mom_vec[1] == 0 || mom_vec[2] == 0 ){
+  qhg_der_correlator out = qhg_averaged_der_correlator_init(site_size, 
+							    in.lat, 
+							    in.mom_list, 
+							    ncorr, 
+							    in.der_order);
 
-    site_size = 1;
-    ncorr = 6;
-    
-    out = qhg_averaged_der_correlator_init(site_size, in.lat, in.mom_list, ncorr, in.der_order);
+  int c = 0;
 
-    for(int mu=0; mu<ND; mu++)
-      for(int nu=mu+1; nu<ND; nu++){
-	qhg_avg_der_combos_O_mu_mu_nu_nu(out.C[c], in.C, mu, nu, in.vol_size);
-	c++;
-      }
+  for(int mu=0; mu<ND; mu++)
+    for(int nu=mu+1; nu<ND; nu++){
+      qhg_avg_der_combos_O_mu_mu_nu_nu(out.C[c], in.C, mu, nu, in.vol_size);
+      c++;
+    }
 
-  } else{
-
-    site_size = 1;
-    ncorr = 7;
-
-    out = qhg_averaged_der_correlator_init(site_size, in.lat, in.mom_list, ncorr, in.der_order);
-
-    for(int mu=0; mu<ND; mu++)
-      for(int nu=mu+1; nu<ND; nu++){
-	qhg_avg_der_combos_O_mu_mu_nu_nu(out.C[c], in.C, mu, nu, in.vol_size);
-	c++;
-      }
-
+  if( mom_vec[0] != 0 && mom_vec[1] != 0 && mom_vec[2] != 0 )
     qhg_avg_der_combos_O_mu_nu_rho_sig(out.C[c], in.C, 
 				       0, 1, 2, 3, in.vol_size);
+
+  if(in.mom_list == NULL) {
+    for(int i=0; i<ND; i++)
+      out.origin[i] = in.origin[i];
+    out.mom_list = NULL;
+  } else {
+    out.origin[0] = in.origin[0];
+    out.mom_list = in.mom_list;
   }
+
   out.dt = in.dt;
   out.flav = in.flav;
   out.proj = in.proj;

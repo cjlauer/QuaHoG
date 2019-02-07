@@ -236,12 +236,7 @@ qhg_write_mesons_averaged_thrp_der(char fname[], qhg_der_correlator corr, char g
 			       '0','x','z',
 			       '0','y','z' };
       c_dirs = c_dirs_tmp;
-    /*
-    MPI_Barrier(lat->comms->comm);
-    if(am_io_proc)
-      printf("%s\n",c_dirs);
-    MPI_Barrier(lat->comms->comm);
-    */
+
     } 
     else {
       printf("ERROR: Number of averaged derivative combination %d not supported for derivative order %d.\n", ncorr, der_order);
@@ -383,11 +378,5 @@ qhg_write_mesons_averaged_thrp_der(char fname[], qhg_der_correlator corr, char g
   H5Gclose(top_id);
   H5Fclose(file_id);
 
-  /*
-  MPI_Barrier(lat->comms->comm);
-  if(am_io_proc)
-    printf("FLAG\n");
-  MPI_Barrier(lat->comms->comm);
-  */
   return;
 }
