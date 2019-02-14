@@ -109,7 +109,7 @@ qhg_write_mesons(char fname[], qhg_correlator corr, char group[])
 
 
 void
-qhg_write_single_meson(char fname[], qhg_correlator corr, enum space corrSpace, char group[])
+qhg_write_single_meson(char fname[], qhg_correlator corr, char group[])
 {
   qhg_lattice *lat = corr.lat;
   int proc_id = lat->comms->proc_id;
@@ -130,32 +130,15 @@ qhg_write_single_meson(char fname[], qhg_correlator corr, enum space corrSpace, 
   hsize_t *dims;
   hsize_t *ldims;
   
-  if(corrSpace == MOM_SPACE){
+  hsize_t starts_tmp[ND+1] = {pc[0]*ld[0], pc[1]*ld[1], pc[2]*ld[2], pc[3]*ld[3], 0};
+  starts = starts_tmp;
 
-    printf("ERROR: Momentum space not supported for writing, yet.");
-    /*
-    mom_list = corr.mom_list;
-    n_mom_vecs = mom_list->n_mom_vecs;
-    max_mom_sq = mom_list->max_mom_sq;
+  hsize_t dims_tmp[ND+1] = {d[0], d[1], d[2], d[3], 2};
+  dims = dims_tmp;
 
-    starts[3] = {pc[0]*ld[0], , 0};
-    dims[3] = {d[0], n_mom_vecs, 2};
-    ldims[3] = {ld[0], site_size, 2};
-    */
-  }
-  else{
-
-    hsize_t starts_tmp[ND+1] = {pc[0]*ld[0], pc[1]*ld[1], pc[2]*ld[2], pc[3]*ld[3], 0};
-    starts = starts_tmp;
-
-    hsize_t dims_tmp[ND+1] = {d[0], d[1], d[2], d[3], 2};
-    dims = dims_tmp;
-
-    hsize_t ldims_tmp[ND+1] = {ld[0], ld[1], ld[2], ld[3], 2};
-    ldims = ldims_tmp;
+  hsize_t ldims_tmp[ND+1] = {ld[0], ld[1], ld[2], ld[3], 2};
+  ldims = ldims_tmp;
   
-  }
-
   hid_t fapl_id = H5Pcreate(H5P_FILE_ACCESS);
   H5Pset_fapl_mpio(fapl_id, MPI_COMM_WORLD, MPI_INFO_NULL);
   hid_t file_id = H5Fcreate(fname, H5F_ACC_TRUNC, H5P_DEFAULT, fapl_id);
@@ -166,19 +149,13 @@ qhg_write_single_meson(char fname[], qhg_correlator corr, enum space corrSpace, 
   hid_t top_id = H5Gcreate(file_id, group, lcpl_id, H5P_DEFAULT, H5P_DEFAULT);
   
   double *buf;
-  if(corrSpace == MOM_SPACE){
+  buf = qhg_alloc(sizeof(double)*lvol*2);
+  _Complex double *c = corr.C;
 
-  }
-  else{
-
-    buf = qhg_alloc(sizeof(double)*lvol*2);
-    _Complex double *c = corr.C;
-
-    for(unsigned long int v=0; v<lvol; v++) {
-      buf[0 + 2*v] = creal(corr.C[v]);
-      buf[1 + 2*v] = cimag(corr.C[v]);
+  for(unsigned long int v=0; v<lvol; v++) {
+    buf[0 + 2*v] = creal(corr.C[v]);
+    buf[1 + 2*v] = cimag(corr.C[v]);
       
-    }
   }
   /*
     Attributes (metadata) are: 
@@ -193,12 +170,7 @@ qhg_write_single_meson(char fname[], qhg_correlator corr, enum space corrSpace, 
   H5Sclose(attrdat_id);
 
   char *order;
-  if(corrSpace == MOM_SPACE){
-    //order = "C-order: [t,Q,real/imag]\0";
-  }
-  else{
     order = "C-order: [t,x,y,z,real/imag]\0";
-  }
   attrdat_id = H5Screate(H5S_SCALAR);
   hid_t type_id = H5Tcopy(H5T_C_S1);
   H5Tset_size(type_id, strlen(order));
@@ -213,18 +185,10 @@ qhg_write_single_meson(char fname[], qhg_correlator corr, enum space corrSpace, 
   hid_t filespace;
   hid_t dataset_id;
   hid_t subspace;
-  if(corrSpace == MOM_SPACE){
-    /*
-    filespace = H5Screate_simple(3, dims, NULL); 
-    dataset_id = H5Dcreate(top_id, "corr_p", H5T_NATIVE_DOUBLE, filespace,H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-    subspace = H5Screate_simple(3, ldims, NULL);
-    */
-  }
-  else{
-    filespace = H5Screate_simple(ND+1, dims, NULL); 
-    dataset_id = H5Dcreate(top_id, "corr_x", H5T_NATIVE_DOUBLE, filespace,H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-    subspace = H5Screate_simple(ND+1, ldims, NULL);
-  }
+  filespace = H5Screate_simple(ND+1, dims, NULL); 
+  dataset_id = H5Dcreate(top_id, "corr_x", H5T_NATIVE_DOUBLE, filespace,H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+  subspace = H5Screate_simple(ND+1, ldims, NULL);
+
   filespace = H5Dget_space(dataset_id);
   H5Sselect_hyperslab(filespace, H5S_SELECT_SET, starts, NULL, ldims, NULL);
   hid_t plist_id = H5Pcreate(H5P_DATASET_XFER);
