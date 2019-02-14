@@ -122,10 +122,6 @@ qhg_write_single_meson(char fname[], qhg_correlator corr, char group[])
   int *ld = lat->ldims;
   int *d = lat->dims;
 
-  qhg_mom_list *mom_list;
-  unsigned long int n_mom_vecs;
-  int max_mom_sq;
-
   hsize_t *starts;
   hsize_t *dims;
   hsize_t *ldims;
@@ -155,7 +151,6 @@ qhg_write_single_meson(char fname[], qhg_correlator corr, char group[])
   for(unsigned long int v=0; v<lvol; v++) {
     buf[0 + 2*v] = creal(corr.C[v]);
     buf[1 + 2*v] = cimag(corr.C[v]);
-      
   }
   /*
     Attributes (metadata) are: 
@@ -170,7 +165,7 @@ qhg_write_single_meson(char fname[], qhg_correlator corr, char group[])
   H5Sclose(attrdat_id);
 
   char *order;
-    order = "C-order: [t,x,y,z,real/imag]\0";
+  order = "C-order: [t,x,y,z,real/imag]\0";
   attrdat_id = H5Screate(H5S_SCALAR);
   hid_t type_id = H5Tcopy(H5T_C_S1);
   H5Tset_size(type_id, strlen(order));
