@@ -24,18 +24,18 @@ qhg_gluon_loop_init(qhg_lattice *lat)
 }
 
 void
-qhg_gluon_loop_finalize(qhg_gluon_loop gl)
-{
-  free(gl.loop);
-  gl.lat = NULL;
-  return;
-}
-
-void
 qhg_gluon_loop_copy(qhg_gluon_loop y, qhg_gluon_loop x)
 {
   y.lat = x.lat;
   memcpy(y.loop, x.loop, x.lat->lvol*sizeof(_Complex double));
+  return;
+}
+
+void
+qhg_gluon_loop_finalize(qhg_gluon_loop gl)
+{
+  free(gl.loop);
+  gl.lat = NULL;
   return;
 }
 

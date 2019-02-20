@@ -122,7 +122,9 @@ qhg_plaquette(qhg_gauge_field gf)
     plaq += plaquette_00(U, nn, v00);
 
   MPI_Comm comm = gf.lat->comms->comm;
+
   MPI_Allreduce(MPI_IN_PLACE, &plaq, 1, MPI_DOUBLE, MPI_SUM, comm);
+
   unsigned long int vol = gf.lat->vol;
   return plaq/(ND*(ND-1)/2)/(double)vol/NC;
 }
