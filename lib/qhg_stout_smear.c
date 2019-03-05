@@ -11,19 +11,18 @@
 
 #define G(v,mu) (((v)*ND + mu)*NC*NC)
 
-void qhg_print3x3(_Complex double *M){
+void qhg_su3_print(_Complex double *in)
+{
+  printf("\n");    
 
-  for(int i=0; i<NC; i++){
-    for(int j=0; j<NC; j++){
-      printf("%+f%+fi, ", creal(M[CC(i,j)]), cimag(M[CC(i,j)]));
-      fflush(stdout);
-    }
-    printf("\n");
-    fflush(stdout);
-  }	   
-  printf("\n");
-  fflush(stdout);
-      
+  for(int c0=0; c0<NC; c0++){
+    for(int c1=0; c1<NC; c1++)
+      printf("%f%+fi,",creal(in[c0*NC+c1]),cimag(in[c0*NC+c1]));
+
+    printf("\n");    
+  }
+  printf("\n");    
+
   return;
 }
 
@@ -50,18 +49,12 @@ void qhg_exp(_Complex double *M)
   _Complex double f0,f1,f2;
   _Complex double h0,h1,h2;
 
-  _Complex double M2[NC*NC],M3[NC*NC],sum[NC*NC],sum1[NC*NC];
+  _Complex double M2[NC*NC],M3[NC*NC],one[NC*NC];
 
-  _Complex double one[NC*NC] = { 1.0, 0.0, 0.0,
-				 0.0, 1.0, 0.0,
-				 0.0, 0.0, 1.0 };
   _Complex double C,C1;
   _Complex double tmp,tmp1;
   double factor;
-  int sign;
-  unsigned int i;
-
-  sign=0;
+  int sign=0;
 
   su3_mul_uu(M2,M,M); //M2=M*M
   su3_mul_uu(M3,M2,M); //M3=M*M*M
@@ -69,19 +62,19 @@ void qhg_exp(_Complex double *M)
   c0=su3_linalg_trace_u(M3);
   c1=su3_linalg_trace_u(M2);
 
-  c0 = creal(c0)/3.0 + I*cimag(c0);
-  c1 = creal(c1)/2.0 + I*cimag(c1);
+  c0 = c0/3.0;
+  c1 = c1/2.0;
   
   if(creal(c0)<0){
     sign=1;
-    c0 = -creal(c0) + I*cimag(c0);
+    c0 *= -1.0;
   }
-  c0max=2.0*pow(creal(c1)/3.0,1.5);
+  c0max=2.0*pow(c1/3.0,1.5);
 
-  theta=acos(creal(c0)/c0max);
+  theta=acos(c0/c0max);
 
-  u=sqrt(creal(c1)/3.0)*cos(theta/3.0);
-  w=sqrt(creal(c1))*sin(theta/3.0);
+  u=sqrt(c1/3.0)*cos(theta/3.0);
+  w=sqrt(c1)*sin(theta/3.0);
 
   C=cos(2*u) + I*sin(2*u); //exp(2iu)
   C1=cos(u) - I*sin(u);   //exp(-iu)
@@ -113,12 +106,13 @@ void qhg_exp(_Complex double *M)
       f2=conj(h2/factor);
     }
 
-  su3_linalg_au(f0,one); //f0*I and store in one
-  su3_linalg_au(f1,M);   //f1*M and store in M
-  su3_linalg_au(f2,M2);  //f2*M^2
+  _Complex double f0_arr[NC] = {f0,f0,f0};
+  su3_linalg_diag(one, f0_arr); //one=f0*I
+  su3_linalg_au(f1,M);          //f1*M and store in M
+  su3_linalg_au(f2,M2);         //f2*M^2
 
   su3_linalg_upeqv(M,one); //M=M+one
-  su3_linalg_upeqv(M,M2); //M=M+M2=f0*I+f1*Q+f2*Q^2 -> exp(iM), eq.(19)
+  su3_linalg_upeqv(M,M2); //M=M+M2=f0*I+f1*Q+f2*Q^2 -> exp(iQ), eq.(19)
 
   return;
 }
@@ -186,42 +180,39 @@ qhg_stout_smear_iter(qhg_gauge_field out, qhg_gauge_field in, double omega)
       u0 = &U[G(v00, mu)];
       u1 = &V[G(v00, mu)];
 
-      /* multiply staple by omega 
-       C = omega * staple*/
-
-      su3_linalg_au(omega, staple);
-
-      /* Omega = C*U^+ */
+      /* Omega = staple*U^+ */
 
       su3_mul_ud(w, staple, u0);
 
       /* Omega^+ - Omega */
-      su3_linalg_ueqvd(u1, w);
-      su3_linalg_umeqv(u1, w);
+      su3_linalg_ueqvd(u, w);
+      su3_linalg_umeqv(u, w);
       
       /* calculate trace term of Q 
-       i/2/NC * tr(Omega^+ - Omega) */
-      _Complex double trace = su3_linalg_trace_u(u1);
-      _Complex double atrace[NC] = {trace, trace, trace};
-      su3_linalg_diag(u2, atrace);
-      su3_linalg_au(I/2/NC, u2);
+	 1/NC * tr(Omega^+ - Omega) */
 
-      /* multiply (Omega^+ - Omega) by i/2 */
-
-      su3_linalg_au(I/2, u1);
+      _Complex double trace = su3_linalg_trace_u(u);
+      _Complex double factor[NC] = {trace/NC, trace/NC, trace/NC};
+      su3_linalg_diag(u2, factor);
 
       /* calculate Q 
-       Q = i/2*(Omega^+ - Omega) - i/2/NC*tr(Omega^+ - Omega) */
+	 Q = i*omega/2*[(Omega^+ - Omega) - 1/NC*tr(Omega^+ - Omega)] */
 
-      su3_linalg_umeqv(u1, u2);
+      su3_linalg_umeqv(u, u2);
+      su3_linalg_au(I*0.5*omega, u);
 
       /* calculate exp(iQ) */
 
-      qhg_exp( u1 );
+      qhg_exp( u );
 
       /* Multiply exp(iQ) by U */
 
-      su3_mul_uu(u1, u1, u0);
+      su3_mul_uu(u1, u, u0);
+
+      if(in.lat->comms->proc_id==0 && mu==0 && v00==0){
+	printf("U^(n+1):\n");
+	qhg_su3_print(u1);
+      }
 
     }
 #ifdef QHG_OMP

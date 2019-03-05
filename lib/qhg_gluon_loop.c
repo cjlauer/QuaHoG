@@ -56,7 +56,7 @@ gluon_plaq(_Complex double *U, unsigned long int **nn, unsigned long int v00, in
   su3_mul_ud(y, x, u2);
   su3_mul_ud(x, y, u3);	
       
-  return su3_linalg_trace_u(x);
+  return creal( su3_linalg_trace_u(x) );
 }
 
 void
@@ -74,7 +74,10 @@ qhg_calculate_gluon_loop(qhg_gluon_loop out, qhg_gauge_field gf)
 
   qhg_gluon_loop gl = qhg_gluon_loop_init(lat);
 
-  for(unsigned long int v00=0; v00<lvol; v00++)
+  for(unsigned long int v00=0; v00<lvol; v00++){
+
+    gl.loop[v00] = 0.0;
+
     for(unsigned long int i=1; i<ND; i++){
 
       gl.loop[v00] += gluon_plaq(U, nn, v00, i, 0);
@@ -83,6 +86,7 @@ qhg_calculate_gluon_loop(qhg_gluon_loop out, qhg_gauge_field gf)
 	gl.loop[v00] -= gluon_plaq(U, nn, v00, j, i);
     
     }
+  }
 
   qhg_gluon_loop_copy(out, gl);
 
