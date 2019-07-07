@@ -11,6 +11,7 @@
 #include <qhg_gauge_field.h>
 #include <qhg_spinor_field.h>
 #include <qhg_correlator.h>
+#include <qhg_der_correlator.h>
 #include <qhg_xchange_gauge.h>
 #include <qhg_xchange_spinor.h>
 #include <qhg_import_gauge_field.h>
@@ -46,6 +47,7 @@
 #include <qhg_io_utils.h>
 #include <qhg_correlator_shift.h>
 #include <qhg_conjugate_thrp.h>
+#include <qhg_avg_der_combos.h>
 #include <qhg_ft.h>
 
 #endif /* _QHG_H */

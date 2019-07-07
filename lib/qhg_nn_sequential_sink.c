@@ -260,8 +260,11 @@ qhg_phase_sequential_sink(qhg_spinor_field out[], qhg_spinor_field in[], int mom
     double ph = 0;
     for(int d=0; d<3; d++)
       ph += (mom[d]*(shift[d]+co[d+1]))/dims[d+1];
+
     ph *= sign*2*M_PI;
-    coeff = cos(ph) - _Complex_I * sin(ph);
+
+    coeff = cos(ph) + _Complex_I * sin(ph);
+
     for(int cs0=0; cs0<NS*NC; cs0++)
       for(int cs1=0; cs1<NS*NC; cs1++) {
         out[cs0].field[VSC(v, cs1)] = in[cs0].field[VSC(v, cs1)]*coeff;
