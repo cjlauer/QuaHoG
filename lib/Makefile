@@ -60,7 +60,6 @@ SOURCES=\
 	qhg_prop_field_linalg		\
 	qhg_ft				\
 	qhg_nn_sequential_sink		\
-	qhg_phase			\
 	qhg_conjugate_thrp              \
 	qhg_avg_der_combos		\
 	qhg_correlator_shift
