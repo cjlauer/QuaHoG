@@ -38,6 +38,7 @@ SOURCES=\
 	qhg_mom_list			\
 	qhg_write_mesons_thrp           \
 	qhg_mesons_udsc			\
+	qhg_mesons			\
 	qhg_write_mesons		\
 	qhg_write_mesons_udsc		\
 	qhg_nucleons			\
