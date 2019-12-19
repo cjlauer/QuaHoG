@@ -109,6 +109,7 @@ qhg_read_gauge_field_ildg(qhg_gauge_field g, char fname[])
   int status = limeReaderNextRecord(reader);
   while(status != LIME_EOF) {
     char *type = limeReaderType(reader);
+
     if(strcmp(type, "ildg-format") == 0) {
       handle_ildg_format(reader);
     }

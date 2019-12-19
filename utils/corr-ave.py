@@ -74,9 +74,11 @@ def main():
     parser.add_argument("fn1", type=str, metavar="FNAME", nargs="+", help="two or more file names")
     parser.add_argument("-o", "--output", metavar="F", type=str, default='ave.h5',
                         help="output file name (default: ave.h5)")
+    parser.add_argument("-ts", "--tsink", action='store', type=int)
     args = parser.parse_args()
     fnames = [args.fn0] + args.fn1
     output = args.output    
+    ts = args.tsink
     root = get_root(fnames)
     spos = get_src_pos(fnames, root)
     names = get_dset_names(fnames, root, spos)
@@ -88,6 +90,12 @@ def main():
             ds = root + "/" + sp + "/" + n + "/mvec"
             mvec = get_dset(fn, ds)
             data[sp][n] = {"arr": arr, "mvec": mvec}
+            st=int(sp[-2:])
+            if ts:
+                if st >= 64 - ts:
+                    data[sp][n]["arr"][:ts+1,:]=-1.0*data[sp][n]["arr"][:ts+1,:]
+                else:
+                    data[sp][n]["arr"][ts+1:,:]=-1.0*data[sp][n]["arr"][ts+1:,:]
     # Now check if the momentum vectors of each dataset match
     for n in names:
         for sp in spos[1:]:

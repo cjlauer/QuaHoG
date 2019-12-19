@@ -166,7 +166,7 @@ qhg_nn_thrp_der(qhg_spinor_field fwd[NS*NC], qhg_spinor_field bwd[NS*NC], qhg_ga
       end[dirs[j]%ND] += (1 - 2*(dirs[j]/ND));
       factor *= (1. - 2.*(dirs[j]/ND)); 
     }
-    if(to_skip != NULL && to_skip(count_dirs)) continue;
+    //if(to_skip != NULL && to_skip(count_dirs)) continue;
     
     int n_perms = 1;
     if(perm_trick) {
