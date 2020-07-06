@@ -30,6 +30,19 @@ def get_src_pos(fnames, root):
         assert re.match(s, spo) is not None, "One or more second-level groups not of the form %s" % s
     return spos
 
+def get_src_num(fname, root):
+    # Return a the number of source positions from averaged HDF5 file
+    # with name fname. These should be the names of the second-level group. If
+    # the group names are not as expected, throw an assertion exception
+    #for fn in fnames:
+    with h5py.File(fname, "r") as fp:
+        snum = list(fp[root].keys())
+    assert len(set(snum)) == len(fname), "Number of unique source positions != len(fnames)"
+    s = "avg[0-9]{2}"
+    for spo in snum:
+        assert re.match(s, spo) is not None, "One or more second-level groups not of the form %s" % s
+    return snum
+
 def get_dset_names(fnames, root, spos):
     # Returns the full list of dataset names in fnames, under
     # root/spos These must be unique for all files, otherwise an
@@ -74,11 +87,29 @@ def main():
     parser.add_argument("fn1", type=str, metavar="FNAME", nargs="+", help="two or more file names")
     parser.add_argument("-o", "--output", metavar="F", type=str, default='ave.h5',
                         help="output file name (default: ave.h5)")
+    parser.add_argument("-a", "--averaged_file", type=str,
+                        help="file name of averaged correlators to be included in the total average")
     parser.add_argument("-ts", "--tsink", action='store', type=int)
     args = parser.parse_args()
     fnames = [args.fn0] + args.fn1
     output = args.output    
+    averaged_file = args.averaged_file
     ts = args.tsink
+
+    if averaged_file:
+
+        root = get_root([averaged_file])
+        snum = get_src_num(averaged_file, root)
+        snum_int=int(snum[-2:])
+        names = get_dset_names([averaged_file], root, [snum])
+        avg_data = {}
+        for n in names:
+            ds = root + "/" + snum + "/" + n + "/arr"
+            arr = get_dset(averaged_file, ds)
+            ds = root + "/" + snum + "/" + n + "/mvec"
+            mvec = get_dset(averaged_file, ds)
+            avg_data[n] = {"arr": arr, "mvec": mvec}
+
     root = get_root(fnames)
     spos = get_src_pos(fnames, root)
     names = get_dset_names(fnames, root, spos)
@@ -105,10 +136,17 @@ def main():
     # Average arr over source positions Momentum vectors are taken
     # from first file. We've allready checked they are identical over
     # files
-    ave = {n: {'arr': np.array([data[sp][n]['arr'] for sp in spos]).mean(axis=0),
-               'mvec': data[spos[0]][n]['mvec']}
-           for n in names}
-    nsrc = len(fnames)
+    if average_file:
+        ave = {n: {'arr': np.array([data[sp][n]['arr'] for sp in spos]).mean(axis=0)
+                   + avg_data[n]['arr'] * snum_int,
+                   'mvec': data[spos[0]][n]['mvec']}
+               for n in names}
+        nsrc = len(fnames) + snum_int
+    else:
+        ave = {n: {'arr': np.array([data[sp][n]['arr'] for sp in spos]).mean(axis=0),
+                   'mvec': data[spos[0]][n]['mvec']}
+               for n in names}
+        nsrc = len(fnames)
     top = root + "/ave%d" % nsrc
     init_h5file(output, top, attrs={"Source positions": spos})
     for n in names:
