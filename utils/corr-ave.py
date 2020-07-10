@@ -36,11 +36,10 @@ def get_src_num(fname, root):
     # the group names are not as expected, throw an assertion exception
     #for fn in fnames:
     with h5py.File(fname, "r") as fp:
-        snum = list(fp[root].keys())
-    assert len(set(snum)) == len(fname), "Number of unique source positions != len(fnames)"
-    s = "avg[0-9]{2}"
-    for spo in snum:
-        assert re.match(s, spo) is not None, "One or more second-level groups not of the form %s" % s
+        snum = list(fp[root].keys())[0]
+    #assert len(set(snum)) == len(fname), "Number of unique source positions != len(fnames)"
+    s = "ave[0-9]{2}"
+    assert re.match(s, snum) is not None, "One or more second-level groups not of the form %s" % s
     return snum
 
 def get_dset_names(fnames, root, spos):
@@ -136,22 +135,23 @@ def main():
     # Average arr over source positions Momentum vectors are taken
     # from first file. We've allready checked they are identical over
     # files
-    if average_file:
-        ave = {n: {'arr': np.array([data[sp][n]['arr'] for sp in spos]).mean(axis=0)
-                   + avg_data[n]['arr'] * snum_int,
+    if averaged_file:
+        nsrc = len(fnames) + snum_int
+        ave = {n: {'arr': ( np.array([data[sp][n]['arr'] for sp in spos]).sum(axis=0)
+                            + avg_data[n]['arr'] * snum_int ) / nsrc,
                    'mvec': data[spos[0]][n]['mvec']}
                for n in names}
-        nsrc = len(fnames) + snum_int
     else:
+        nsrc = len(fnames)
         ave = {n: {'arr': np.array([data[sp][n]['arr'] for sp in spos]).mean(axis=0),
                    'mvec': data[spos[0]][n]['mvec']}
                for n in names}
-        nsrc = len(fnames)
     top = root + "/ave%d" % nsrc
     init_h5file(output, top, attrs={"Source positions": spos})
     for n in names:
         grp = top + "/" + n
         write_dset(output, grp, ave[n])
+    print("Wrote {}".format(output))
     return 0
 
 if __name__ == "__main__":
