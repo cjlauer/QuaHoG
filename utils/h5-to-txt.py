@@ -42,6 +42,10 @@ thrp_gams = ["=loc:1=", "=loc:g5=", "=loc:g0=", "=loc:gx=", "=loc:gy=", "=loc:gz
              "=der:g5siz0D0:sym=", "=der:g5siz0Dx:sym=", "=der:g5siz0Dy:sym=",
              "=der:g5siz0Dz:sym=", "=der:g5sizxDx:sym=", "=der:g5sizxDy:sym=",
              "=der:g5sizxDz:sym=", "=der:g5sizyDy:sym=", "=der:g5sizyDz:sym="]
+thrp_der2_gams = ["der2:g0DxDy", "der2:g0DxDz", "der2:g0DyDz"]
+thrp_der3_gams = ["der3:g0D0DxDx", "der3:g0D0DyDy", "der3:g0D0DzDz",
+                  "der3:g0DxDyDz", "der3:gxDxDyDy", "der3:gxDxDzDz",
+                  "der3:gyDyDzDz"]
 
 def momenta(max_qsq):
     moms = []
@@ -71,8 +75,14 @@ def get_data_type(fname):
             return "proj-nucl"
         if '2-2' in " ".join(names):
             return "nucl"
+        if 'twop' in " ".join(names):
+            return "twop"
         if '=loc:1=' in " ".join(names):
             return "thrp"
+        if 'der2:g0DxDy' in " ".join(names):
+            return "thrp_der2"
+        if 'der3:g0D0DxDx' in " ".join(names):
+            return "thrp_der3"
 
 def totxt_nproj(fname):
     with h5py.File(fname, "r") as fp:
@@ -182,6 +192,36 @@ def totxt_meson(fname):
         buf = "\n".join(lines) + "\n"
         return buf
 
+def totxt_twop(fname):
+    with h5py.File(fname, "r") as fp:
+        names = []
+        fp.visititems(lambda x,t: names.append(x) if 'arr' in x and type(t) is h5py.Dataset else None)
+        top = "/".join(names[0].split("/")[:-2])
+        msqs = list(sorted(set([n.split("/")[-2] for n in names])))
+        max_qsq = max(msqs)
+        max_qsq = int(re.match('msq0*([1-9][0-9]*)', max_qsq).groups()[0])
+        data = {}
+        for msq in msqs:
+            grp = "%s/%s" % (top, msq)
+            arr = np.array(fp[grp]['arr'])
+            mom = np.array(fp[grp]['mvec'])
+            data[msq] = {"arr": arr, "mvec": mom}
+        T = list(data.values())[0]['arr'].shape[0]
+        momvecs = momenta(max_qsq)
+        lines = []
+        for t in range(T):
+            for mv in momvecs:
+                msq = "msq%04d" % mv[0]
+                arr = data[msq]["arr"]
+                mom = data[msq]["mvec"]
+                idx = mom.tolist().index(mv[1:])
+                reim = arr[t,idx]
+                line = "  %2d %+d %+d %+d %+e %+e" % (t, mv[1], mv[2], mv[3],
+                                                      reim.real, reim.imag)
+                lines.append(line)
+        buf = "\n".join(lines) + "\n"
+        return buf
+
 def totxt_thrp(fname):
     with h5py.File(fname, "r") as fp:
         names = []
@@ -214,6 +254,72 @@ def totxt_thrp(fname):
                     lines.append(line)
         buf = "\n".join(lines) + "\n"
         return buf
+
+def totxt_thrp_der2(fname):
+    with h5py.File(fname, "r") as fp:
+        names = []
+        fp.visititems(lambda x,t: names.append(x) if 'arr' in x and type(t) is h5py.Dataset else None)
+        top = "/".join(names[0].split("/")[:-3])
+        msqs = list(sorted(set([n.split("/")[-2] for n in names])))
+        max_qsq = max(msqs)
+        max_qsq = int(re.match('msq0*([1-9][0-9]*)', max_qsq).groups()[0])
+        data = {}
+        for msq in msqs:
+            for gam in thrp_der2_gams:
+                grp = "%s/%s/%s/" % (top, gam, msq)
+                arr = np.array(fp[grp]['arr'])
+                mom = np.array(fp[grp]['mvec'])
+                data[msq,gam] = {"arr": arr, "mvec": mom}
+        T = list(data.values())[0]['arr'].shape[0]
+        momvecs = momenta(max_qsq)
+        lines = []
+        for t in range(T):
+            for mv in momvecs:
+                msq = "msq%04d" % mv[0]
+                for gam in thrp_der2_gams:
+                    arr = data[msq,gam]["arr"]
+                    mom = data[msq,gam]["mvec"]
+                    idx = mom.tolist().index(mv[1:])
+                    reim = arr[t,idx]
+                    line = "  %2d %+d %+d %+d  %+e %+e %s" % (t, mv[1], mv[2], mv[3],
+                                                              reim.real, reim.imag,
+                                                              gam)
+                    lines.append(line)
+        buf = "\n".join(lines) + "\n"
+        return buf
+    
+def totxt_thrp_der3(fname):
+    with h5py.File(fname, "r") as fp:
+        names = []
+        fp.visititems(lambda x,t: names.append(x) if 'arr' in x and type(t) is h5py.Dataset else None)
+        top = "/".join(names[0].split("/")[:-3])
+        msqs = list(sorted(set([n.split("/")[-2] for n in names])))
+        max_qsq = max(msqs)
+        max_qsq = int(re.match('msq0*([1-9][0-9]*)', max_qsq).groups()[0])
+        data = {}
+        for msq in msqs:
+            for gam in thrp_der3_gams:
+                grp = "%s/%s/%s/" % (top, gam, msq)
+                arr = np.array(fp[grp]['arr'])
+                mom = np.array(fp[grp]['mvec'])
+                data[msq,gam] = {"arr": arr, "mvec": mom}
+        T = list(data.values())[0]['arr'].shape[0]
+        momvecs = momenta(max_qsq)
+        lines = []
+        for t in range(T):
+            for mv in momvecs:
+                msq = "msq%04d" % mv[0]
+                for gam in thrp_der3_gams:
+                    arr = data[msq,gam]["arr"]
+                    mom = data[msq,gam]["mvec"]
+                    idx = mom.tolist().index(mv[1:])
+                    reim = arr[t,idx]
+                    line = "  %2d %+d %+d %+d  %+e %+e %s" % (t, mv[1], mv[2], mv[3],
+                                                              reim.real, reim.imag,
+                                                              gam)
+                    lines.append(line)
+        buf = "\n".join(lines) + "\n"
+        return buf
     
 def main():
     parser = argparse.ArgumentParser()
@@ -234,8 +340,14 @@ def main():
         buf = totxt_nucl(fname)
     if dt == "meson":
         buf = totxt_meson(fname)
+    if dt == "twop":
+        buf = totxt_twop(fname)
     if dt == "thrp":
         buf = totxt_thrp(fname)
+    if dt == "thrp_der2":
+        buf = totxt_thrp_der2(fname)
+    if dt == "thrp_der3":
+        buf = totxt_thrp_der3(fname)
 
     with open(output, "w") as fp:
         print(" writing to %s" % output)
