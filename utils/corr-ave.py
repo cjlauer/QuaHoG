@@ -13,7 +13,7 @@ def get_root(fnames):
     for fn in fnames:
         with h5py.File(fn, "r") as fp:
             roots += list(fp.keys())
-    assert len(set(roots)) == 1, "Files do not have unique root"
+    assert len(set(roots)) == 1, "Files {} do not have unique root".format(fnames)
     return roots[0]
 
 def get_src_pos(fnames, root):
